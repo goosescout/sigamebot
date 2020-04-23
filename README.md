@@ -1,2 +1,2 @@
 # sigamebot
-Bot for sigame
+Discord-Bot for sigame
