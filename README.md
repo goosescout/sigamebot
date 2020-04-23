@@ -1,0 +1,2 @@
+# sigamebot
+Bot for sigame
