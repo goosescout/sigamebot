@@ -32,27 +32,26 @@ class SiCommands(commands.Cog):
         except ValueError:
             pass
         else:
-            await ctx.send(f"Игра началась!")
-            await ctx.send(f"Вы играете в \"{pack_name}\"\n" +
-                            "Игроки могут присоединятся, написав 'si! join'")
+            await ctx.send(f"Начался сбор участников!")
+            await ctx.send(f"Игроки могут присоединятся, написав 'si! join'\n" + 
+                            "Чтобы завершить сбор игроков, напишите 'si! end'")
 
     @commands.command(name='join')
     async def join(self, ctx):
         if ctx.channel in self.bot.games.keys() and self.bot.games[ctx.channel].is_joinable():
             try:
                 self.bot.games[ctx.channel].add_member(ctx.message.author)
-            except ValueError:
-                await ctx.send(f"{ctx.message.author.mention}, ты уже в игре!")
+            except ValueError as ex:
+                await ctx.send(ex)
             else:
                 await ctx.send(f"К игре присоединяется {ctx.message.author.mention}!")
 
     @commands.command(name='end')
     async def end(self, ctx):
         if ctx.channel in self.bot.games.keys():
-            self.bot.games[ctx.channel].add_member(ctx.message.author)
-            await ctx.send(f"К игре присоединяется {ctx.message.author.mention}!")
-        else:
-            await ctx.send(f"Подождите присоединяться, игра ещё не началась!")
+            self.bot.games[ctx.channel].joinable = False
+            await ctx.send("Сбор учатников закончен")
+
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
@@ -71,7 +70,7 @@ class GameSession:
 
     def add_member(self, member):
         if member in self.members.keys():
-            raise ValueError
+            raise ValueError(f"{member.mention}, ты уже в игре!")
         else:
             self.members[member] = 0
 

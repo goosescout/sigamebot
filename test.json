@@ -1,0 +1,80 @@
+{
+    "rounds": [
+        {
+            "categories": [
+                {
+                    "name": "test1",
+                    "questions": [
+                        {
+                            "text": "test",
+                            "par": 100,
+                            "correct_answers": ["test", "test"],
+                            "answer_time": "test"
+                        },
+                        {
+                            "text": "test",
+                            "par": 100,
+                            "correct_answers": ["test", "test"],
+                            "answer_time": "test"
+                        }
+                    ]
+                },
+                {
+                    "name": "test2",
+                    "questions": [
+                        {
+                            "text": "test",
+                            "par": 100,
+                            "correct_answers": ["test", "test"],
+                            "answer_time": "test"
+                        },
+                        {
+                            "text": "test",
+                            "par": 100,
+                            "correct_answers": ["test", "test"],
+                            "answer_time": "test"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "categories": [
+                {
+                    "name": "test1",
+                    "questions": [
+                        {
+                            "text": "test",
+                            "par": 100,
+                            "correct_answers": ["test", "test"],
+                            "answer_time": "test"
+                        },
+                        {
+                            "text": "test",
+                            "par": 100,
+                            "correct_answers": ["test", "test"],
+                            "answer_time": "test"
+                        }
+                    ]
+                },
+                {
+                    "name": "test2",
+                    "questions": [
+                        {
+                            "text": "test",
+                            "par": 100,
+                            "correct_answers": ["test", "test"],
+                            "answer_time": "test"
+                        },
+                        {
+                            "text": "test",
+                            "par": 100,
+                            "correct_answers": ["test", "test"],
+                            "answer_time": "test"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
