@@ -4,35 +4,37 @@
             "categories": [
                 {
                     "name": "test1",
+                    "description": "test",
                     "questions": [
                         {
                             "text": "test",
                             "par": 100,
                             "correct_answers": ["test", "test"],
-                            "answer_time": "test"
+                            "answer_time": 5
                         },
                         {
                             "text": "test",
                             "par": 100,
                             "correct_answers": ["test", "test"],
-                            "answer_time": "test"
+                            "answer_time": 5
                         }
                     ]
                 },
                 {
                     "name": "test2",
+                    "description": "test",
                     "questions": [
                         {
                             "text": "test",
                             "par": 100,
                             "correct_answers": ["test", "test"],
-                            "answer_time": "test"
+                            "answer_time": 5
                         },
                         {
                             "text": "test",
                             "par": 100,
                             "correct_answers": ["test", "test"],
-                            "answer_time": "test"
+                            "answer_time": 5
                         }
                     ]
                 }
@@ -42,35 +44,37 @@
             "categories": [
                 {
                     "name": "test1",
+                    "description": "test",
                     "questions": [
                         {
                             "text": "test",
                             "par": 100,
                             "correct_answers": ["test", "test"],
-                            "answer_time": "test"
+                            "answer_time": 5
                         },
                         {
                             "text": "test",
                             "par": 100,
                             "correct_answers": ["test", "test"],
-                            "answer_time": "test"
+                            "answer_time": 5
                         }
                     ]
                 },
                 {
                     "name": "test2",
+                    "description": "test",
                     "questions": [
                         {
                             "text": "test",
                             "par": 100,
                             "correct_answers": ["test", "test"],
-                            "answer_time": "test"
+                            "answer_time": 5
                         },
                         {
                             "text": "test",
                             "par": 100,
                             "correct_answers": ["test", "test"],
-                            "answer_time": "test"
+                            "answer_time": 5
                         }
                     ]
                 }
