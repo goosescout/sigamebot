@@ -7,7 +7,7 @@
                     "description": "test",
                     "questions": [
                         {
-                            "text": "test",
+                            "text": "that's it",
                             "par": 100,
                             "correct_answers": ["test", "test"],
                             "answer_time": 5

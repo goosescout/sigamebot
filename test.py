@@ -22,7 +22,7 @@ class SiGameBot(commands.Bot):
         if message.channel in self.games.keys() and self.games[message.channel].get_author_requested() == message.author:
             try:
                 self.games[message.channel].get_question(message.content.split()[0], int(message.content.split()[1]))
-                self.ask_question(message.channel)
+                await self.ask_question(message.channel)
             except Exception as ex:
                 await message.channel.send(ex)
         else:
@@ -179,14 +179,19 @@ class GameSession:
         return self.author_requested
 
     def get_question(self, category_name, par):
+        found = False
         for i, category in enumerate(self.pack['rounds'][self.cur_round]['categories']):
             if category['name'] == category_name:
                 self.cur_categoty_num = i
-                for j, question in enumerate(category['question']):
+                for j, question in enumerate(category['questions']):
                     if question['par'] == par:
                         self.cur_question_num = j
                         self.cur_question = question
-        else:
+                        found = True
+                        break
+            if found:
+                break
+        if not found:
             raise ValueError('Такого вопроса или категории не существует')
 
 
