@@ -2,6 +2,7 @@ import discord
 import os
 import json
 import pymorphy2
+import random
 
 from dotenv import load_dotenv
 from discord.ext import commands
@@ -32,6 +33,8 @@ class SiGameBot(commands.Bot):
         str_categories = '\n'.join(map(lambda x: '• ' + x[0] + ' - ' + x[1], categories.items()))
         await channel.send(f"Начинается {cur_round} раунд\n" +
                            f"Категории раунда:\n{str_categories}", file=discord.File(cur_game.get_image_path()))
+        await channel.send(f"Игру начинает {cur_game.get_cur_player().mention}\n" +
+                           "Вам необходимо выбрать категорию. Для этого введите: 'название категории' 'номинал вопроса' (регистр не учитывается)")
  
 
 class SiCommands(commands.Cog):
@@ -120,6 +123,7 @@ class GameSession:
         if self.joinable:
             if len(self.members) > 0:
                 self.joinable = False
+                self.cur_player = random.choice(list(self.members.keys()))
             else:
                 raise ValueError('Нельзя начать игру, в которой нет игроков')
         else:
@@ -153,6 +157,9 @@ class GameSession:
 
     def get_image_path(self):
         return f'temp/{self.id}.png'
+
+    def get_cur_player(self):
+        return self.cur_player
 
 
 bot = SiGameBot(command_prefix='si! ')
