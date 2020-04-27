@@ -21,10 +21,9 @@ class SiGameBot(commands.Bot):
     async def on_message(self, message):
         if message.channel in self.games.keys() and self.games[message.channel].get_author_requested() == message.author:
             try:
-                self.games[message.channel].get_question(message.content.split()[0], int(message.content.split()[1]))
-                self.ask_question(message.channel)
+                self.games[message.channel]
             except Exception as ex:
-                await message.channel.send(ex)
+                await message.channel(ex)
         else:
             await self.process_commands(message)
 
@@ -42,11 +41,17 @@ class SiGameBot(commands.Bot):
                            f"Категории раунда:\n{str_categories}", file=discord.File(cur_game.get_image_path()))
         await channel.send(f"Игру начинает {cur_game.get_cur_player().mention}\n" +
                            "Вам необходимо выбрать категорию. Для этого введите: 'название категории' 'номинал вопроса' (регистр не учитывается)")
-        cur_game.author_requested = cur_game.get_cur_player()
+
+        question = await self.get_question(cur_game, channel)
+        await channel.send(f"{question}")
         
-    async def ask_question(self, channel):
-        self.games[channel].author_requested = None
-        await channel.send(f"{self.games[channel].cur_question}")
+    async def get_question(self, cur_game, channel):
+        self.author_requested = cur_game.get_cur_player()
+        while not cur_game.cur_question:
+            pass
+        message = cur_game.cur_question
+        cur_game.author_requested = None
+        return message
  
 
 class SiCommands(commands.Cog):
@@ -179,7 +184,7 @@ class GameSession:
         return self.author_requested
 
     def get_question(self, category_name, par):
-        for i, category in enumerate(self.pack['rounds'][self.cur_round]['categories']):
+        for i, category in enumerate(self.pack['rounds'][self.cur_round]['categories']['categories']):
             if category['name'] == category_name:
                 self.cur_categoty_num = i
                 for j, question in enumerate(category['question']):
