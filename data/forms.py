@@ -20,11 +20,13 @@ class RegisterForm(FlaskForm):
     about = TextAreaField('About me')
     submit = SubmitField('Log in')
 
+
 class QuestionForm(FlaskForm):
     title = StringField('Question name', validators=[DataRequired()])
     par = IntegerField('Value of question', validators=[DataRequired()])
     text = TextAreaField('Question', validators=[DataRequired()])
     ans = StringField('Possible answers', validators=[DataRequired()])
+
 
 class CategoryForm(FlaskForm):
     title = StringField('Category name', validators=[DataRequired()])
