@@ -33,8 +33,25 @@ class SiGameBot(commands.Bot):
             except Exception as ex:
                 await message.channel.send(ex)
         elif message.channel in self.games.keys() and self.games[message.channel].get_race_requested() and message.content.strip().lower() == 'si!':
-            self.games[message.channel].cur_ans_player = message.author
-            await self.answer_question(message.channel)
+            if message.author in self.games[message.channel].get_forbidden():
+                await message.channel.send(f"{message.author.mention}, вы уже отвечали")
+            else:
+                self.games[message.channel].cur_ans_player = message.author
+                self.games[message.channel].race_requested = False
+                await self.answer_question(message.channel)
+        elif message.channel in self.games.keys() and not self.games[message.channel].get_race_requested() and self.games[message.channel].cur_ans_player == message.author:
+            cur_game = self.games[message.channel]
+            if cur_game.answer(message.content):
+                await message.add_reaction('✅')
+                await message.channel.send(f"Эта правильный ответ! {cur_game.get_cur_question()['par']} очков игроку {cur_game.get_ans_player().mention}!")
+                cur_game.reset()
+            else:
+                await message.add_reaction('❌')
+                await message.channel.send("К сожалению, это неправильный ответ.")
+                await message.channel.send("Кто первый из игроков напишет 'si!' - тот и будет отвечать!")
+                self.games[message.channel].cur_ans_player = None
+                cur_game.race_requested = True
+                await self.countdown(message.channel)
 
     async def on_ready(self):
         await self.change_presence(activity=discord.Game(name="SiGame"))
@@ -64,6 +81,19 @@ class SiGameBot(commands.Bot):
         await asyncio.sleep(cur_game.get_cur_question()['answer_time'])
         await channel.send("Время вышло!\nКто первый из игроков напишет 'si!' - тот и будет отвечать!")
         cur_game.race_requested = True
+        await self.countdown(channel)
+
+    async def countdown(self, channel):
+        cur_game = self.games[channel]
+        cur_game.countdown_num += 1
+        my_num = cur_game.countdown_num
+        await asyncio.sleep(5)
+        if cur_game.cur_ans_player is None and cur_game.countdown_num == my_num:
+            cur_game.race_requested = False
+            await channel.send("Никто не ответил на вопрос. Вопрос снимается.")
+            cur_game.make_answer_pict()
+            await channel.send(f"Правильный ответ был: {cur_game.get_questions_ans()}", file=discord.File(cur_game.get_answer_path()))
+            cur_game.reset()
 
     async def answer_question(self, channel):
         cur_game = self.games[channel]
@@ -141,6 +171,8 @@ class GameSession:
         self.cur_category = None
         self.cur_question = None
         self.cur_ans_player = None
+        self.forbidden_to_ans = []
+        self.countdown_num = 0
 
     def add_member(self, member):
         if self.joinable:
@@ -209,11 +241,9 @@ class GameSession:
         found = False
         for i, category in enumerate(self.pack['rounds'][self.cur_round]['categories']):
             if category['name'] == category_name:
-                self.cur_category_num = i
                 self.cur_category = category
                 for j, question in enumerate(category['questions']):
                     if question['par'] == par:
-                        self.cur_question_num = j
                         self.cur_question = question
                         self.make_question_pict()
                         found = True
@@ -246,6 +276,51 @@ class GameSession:
 
     def get_race_requested(self):
         return self.race_requested
+
+    def get_ans_player(self):
+        return self.cur_ans_player
+
+    def answer(self, string):
+        formatted_string = string.strip().lower()
+        for correct_answer in self.cur_question['correct_answers']:
+            if len(set(correct_answer.lower())) * 0.8 <= len(set(correct_answer.lower()) | set(formatted_string)) <= len(set(correct_answer.lower())):
+                self.members[self.cur_ans_player] += self.cur_question['par']
+                self.cur_player = self.cur_ans_player
+                return True
+        else:
+            self.members[self.cur_ans_player] -= self.cur_question['par']
+            self.forbid_to_ans(self.cur_ans_player)
+            return False
+
+    def forbid_to_ans(self, member):
+        self.forbidden_to_ans.append(member)
+
+    def reset(self):
+        self.author_requested = None
+        self.race_requested = False
+        self.cur_category = None
+        self.cur_question = None
+        self.cur_ans_player = None
+        self.forbidden_to_ans = []
+        self.countdown_counter = 0
+
+    def get_forbidden(self):
+        return self.forbidden_to_ans
+
+    def get_questions_ans(self):
+        return random.choice(self.cur_question['correct_answers'])
+
+    def make_answer_pict(self):
+        img = Image.new("RGB", (701, 401), (0, 0, 255))
+        draw = ImageDraw.Draw(img)
+        font = ImageFont.truetype('static/OpenSans.ttf', 35)
+        draw.rectangle([(0, 0), (700, 400)], width=2, outline=(255, 255, 0))
+        #draw.text((i * 100 + 5, j * 75 + 15), self.pack['rounds'][self.cur_round]['categories'][j]['name'], fill=(255, 255, 0), font=font)
+
+        img.save(f'temp/a{self.id}.png')
+
+    def get_answer_path(self):
+        return f'temp/a{self.id}.png'
 
 
 bot = SiGameBot(command_prefix='si! ')
