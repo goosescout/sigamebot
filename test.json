@@ -7,32 +7,32 @@
                     "description": "test",
                     "questions": [
                         {
-                            "text": "that's it",
+                            "text": "1",
                             "par": 100,
                             "correct_answers": ["test", "test"],
                             "answer_time": 5
                         },
                         {
-                            "text": "test",
-                            "par": 100,
+                            "text": "2",
+                            "par": 200,
+                            "correct_answers": ["test", "test"],
+                            "answer_time": 5
+                        },
+                        {
+                            "text": "3",
+                            "par": 300,
                             "correct_answers": ["test", "test"],
                             "answer_time": 5
                         },
                         {
                             "text": "test",
-                            "par": 100,
+                            "par": 400,
                             "correct_answers": ["test", "test"],
                             "answer_time": 5
                         },
                         {
                             "text": "test",
-                            "par": 100,
-                            "correct_answers": ["test", "test"],
-                            "answer_time": 5
-                        },
-                        {
-                            "text": "test",
-                            "par": 100,
+                            "par": 500,
                             "correct_answers": ["test", "test"],
                             "answer_time": 5
                         }
@@ -50,25 +50,25 @@
                         },
                         {
                             "text": "test",
-                            "par": 100,
+                            "par": 200,
                             "correct_answers": ["test", "test"],
                             "answer_time": 5
                         },
                         {
                             "text": "test",
-                            "par": 100,
+                            "par": 300,
                             "correct_answers": ["test", "test"],
                             "answer_time": 5
                         },
                         {
                             "text": "test",
-                            "par": 100,
+                            "par": 400,
                             "correct_answers": ["test", "test"],
                             "answer_time": 5
                         },
                         {
                             "text": "test",
-                            "par": 100,
+                            "par": 500,
                             "correct_answers": ["test", "test"],
                             "answer_time": 5
                         }

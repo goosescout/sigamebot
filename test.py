@@ -32,7 +32,7 @@ class SiGameBot(commands.Bot):
                 await message.channel.send("Недостаточно аргументов")
             except Exception as ex:
                 await message.channel.send(ex)
-        elif message.channel in self.games.keys() and self.games[message.channel].get_race_requested() and message.content.strip().lower() == 'si!':
+        elif message.channel in self.games.keys() and self.games[message.channel].get_race_requested() and message.content.strip().lower() == 'si!' and self.games[message.channel].is_member(message.author):
             if message.author in self.games[message.channel].get_forbidden():
                 await message.channel.send(f"{message.author.mention}, вы уже отвечали")
             else:
@@ -45,28 +45,39 @@ class SiGameBot(commands.Bot):
                 await message.add_reaction('✅')
                 await message.channel.send(f"Эта правильный ответ! {cur_game.get_cur_question()['par']} очков игроку {cur_game.get_ans_player().mention}!")
                 cur_game.reset()
+                await self.show_questions(message.channel)
             else:
                 await message.add_reaction('❌')
                 await message.channel.send(f"К сожалению, это неправильный ответ. {cur_game.get_ans_player().mention} теряет {cur_game.get_cur_question()['par']} очков.")
-                await message.channel.send("Кто первый из игроков напишет 'si!' - тот и будет отвечать!")
-                self.games[message.channel].cur_ans_player = None
-                cur_game.race_requested = True
-                await self.countdown(message.channel)
+                if cur_game.get_forbidden() == list(cur_game.get_members()):
+                    await message.channel.send("Никто не ответил на вопрос. Вопрос снимается.")
+                    cur_game.make_answer_pict()
+                    await message.channel.send(f"Правильный ответ был: {cur_game.get_questions_ans()}", file=discord.File(cur_game.get_answer_path()))
+                    cur_game.reset()
+                    await self.show_questions(message.channel)
+                else:
+                    await message.channel.send("Кто первый из игроков напишет 'si!' - тот и будет отвечать!")
+                    self.games[message.channel].cur_ans_player = None
+                    cur_game.race_requested = True
+                    await self.countdown(message.channel)
 
     async def on_ready(self):
         await self.change_presence(activity=discord.Game(name="SiGame"))
 
-    async def start_game(self, channel):
+    async def show_questions(self, channel, start=False):
         cur_game = self.games[channel]
-        cur_round = cur_game.update_round()
-        categories = cur_game.get_categories()
-        str_categories = '\n'.join(map(lambda x: '• ' + x[0] + ' - ' + x[1], categories.items()))
-        await channel.send(f"Начинается {cur_round} раунд\n" +
-                           f"Категории раунда:\n{str_categories}", file=discord.File(cur_game.get_image_path()))
         members = cur_game.get_members()
         str_members = '\n'.join(map(lambda x: '• ' + str(x[0].mention) + ' - ' + str(x[1]), members.items()))
+        if start:
+            cur_game.update_round()
+            categories = cur_game.get_categories()
+            str_categories = '\n'.join(map(lambda x: '• ' + x[0] + ' - ' + x[1], categories.items()))
+            await channel.send(f"Начинается {cur_game.get_cur_round() + 1} раунд\n" +
+                               f"Категории раунда:\n{str_categories}", file=discord.File(cur_game.get_image_path()))
+        else:
+            await channel.send(f"Идёт {cur_game.get_cur_round() + 1} раунд\n", file=discord.File(cur_game.get_image_path()))
         await channel.send(f"Баллы игроков:\n{str_members}\n" +
-                           f"Игру начинает {cur_game.get_cur_player().mention}\n" +
+                           f"{cur_game.get_cur_player().mention}, ваш ход\n" +
                            "Вам необходимо выбрать категорию. Для этого введите: 'название категории' 'номинал вопроса' (регистр не учитывается)")
         cur_game.author_requested = cur_game.get_cur_player()
         
@@ -87,21 +98,24 @@ class SiGameBot(commands.Bot):
         cur_game = self.games[channel]
         cur_game.countdown_num += 1
         my_num = cur_game.countdown_num
+        my_question = cur_game.get_cur_question()
         await asyncio.sleep(5)
-        if cur_game.cur_ans_player is None and cur_game.countdown_num == my_num:
+        if cur_game.cur_ans_player is None and cur_game.countdown_num == my_num and my_question == cur_game.get_cur_question():
             cur_game.race_requested = False
             await channel.send("Никто не ответил на вопрос. Вопрос снимается.")
             cur_game.make_answer_pict()
             await channel.send(f"Правильный ответ был: {cur_game.get_questions_ans()}", file=discord.File(cur_game.get_answer_path()))
             cur_game.reset()
+            await self.show_questions(channel)
 
     async def answer_countdown(self, channel):
         cur_game = self.games[channel]
+        my_question = cur_game.get_cur_question()
         await asyncio.sleep(25)
-        if not cur_game.get_race_requested() and cur_game.get_ans_player():
+        if not cur_game.get_race_requested() and cur_game.get_ans_player() and my_question == cur_game.get_cur_question():
             await channel.send(f"{cur_game.get_ans_player().mention}, у вас осталось 5 секунд.")
             await asyncio.sleep(5)
-        if not cur_game.get_race_requested() and cur_game.get_ans_player():
+        if not cur_game.get_race_requested() and cur_game.get_ans_player() and my_question == cur_game.get_cur_question():
             await channel.send(f"{cur_game.get_ans_player().mention}, вы не ответили на вопрос. {cur_game.get_ans_player().mention} теряет {cur_game.get_cur_question()['par']} очков.")
             await channel.send("Кто первый из игроков напишет 'si!' - тот и будет отвечать!")
             cur_game.cur_ans_player = None
@@ -155,7 +169,7 @@ class SiCommands(commands.Cog):
                 await ctx.send("Игра началась!\n" +
                                f"Играется пак вопросов \"{cur_game.pack_name}\"\n" +
                                f"В игре {'участвуют' if len(cur_game.get_members()) > 1 else 'участвует'}: {', '.join(member.mention for member in cur_game.get_members(True))}")
-                await self.bot.start_game(ctx.channel)
+                await self.bot.show_questions(ctx.channel, True)
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
@@ -197,11 +211,17 @@ class GameSession:
         else:
             raise ValueError('Сбор игроков уже завершен')
 
+    def is_member(self, member):
+        return member in self.members.keys()
+
     def is_joinable(self):
         return self.joinable
 
     def get_members(self, names_only=False):
         return self.members.keys() if names_only else self.members
+
+    def get_cur_round(self):
+        return self.cur_round
 
     def end_join(self):
         if self.joinable:
@@ -315,16 +335,18 @@ class GameSession:
         if self.cur_question:
             img = Image.open(self.get_image_path())
             draw = ImageDraw.Draw(img)
-            draw.rectangle([(self.cur_question_num * 100 + 200, self.cur_category_num * 75), ((self.cur_question_num + 1) * 100 + 200, (self.cur_category_num + 1) * 75)], width=2, outline=(255, 255, 0), fill=(0, 0, 255))
+            draw.rectangle([((self.cur_question_num + 5 - len(self.cur_category['questions'])) * 100 + 200, self.cur_category_num * 75), ((self.cur_question_num + 6 - len(self.cur_category['questions'])) * 100 + 200, (self.cur_category_num + 1) * 75)], width=2, outline=(255, 255, 0), fill=(0, 0, 255))
             img.save(self.get_image_path())
+            print('image_altered')
+            del self.pack['rounds'][self.cur_round]['categories'][self.cur_category_num]['questions'][self.cur_question_num]
 
+        self.countdown_num = 0
         self.author_requested = None
         self.race_requested = False
         self.cur_category = None
         self.cur_question = None
         self.cur_ans_player = None
         self.forbidden_to_ans = []
-        self.countdown_counter = 0
 
     def get_forbidden(self):
         return self.forbidden_to_ans
