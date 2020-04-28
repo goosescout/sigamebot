@@ -8,6 +8,7 @@ import asyncio
 from dotenv import load_dotenv
 from discord.ext import commands
 from PIL import Image, ImageDraw, ImageFont
+from textwrap import wrap
 
 
 load_dotenv()
@@ -185,7 +186,7 @@ class GameSession:
         self.id = game_id
         # здесь будет получение пака через API
         
-        with open(f'{pack_name}.json') as f:
+        with open(f'{pack_name}.json', encoding='utf-8') as f:
             self.pack = json.load(f)
 
         # ------
@@ -201,6 +202,7 @@ class GameSession:
         self.cur_ans_player = None
         self.forbidden_to_ans = []
         self.countdown_num = 0
+        self.answer_str = None
 
     def add_member(self, member):
         if self.joinable:
@@ -306,7 +308,13 @@ class GameSession:
         draw = ImageDraw.Draw(img)
         font = ImageFont.truetype('static/OpenSans.ttf', 35)
         draw.rectangle([(0, 0), (700, 400)], width=2, outline=(255, 255, 0))
-        #draw.text((i * 100 + 5, j * 75 + 15), self.pack['rounds'][self.cur_round]['categories'][j]['name'], fill=(255, 255, 0), font=font)
+
+        lines = wrap(self.cur_question['text'], 35)
+        y_text = 30
+        for line in lines:
+            width, height = font.getsize(line)
+            draw.text(((700 - width) / 2, y_text), line, font=font, fill=(255, 255, 0))
+            y_text += height
 
         img.save(f'temp/q{self.id}.png')
 
@@ -337,7 +345,6 @@ class GameSession:
             draw = ImageDraw.Draw(img)
             draw.rectangle([((self.cur_question_num + 5 - len(self.cur_category['questions'])) * 100 + 200, self.cur_category_num * 75), ((self.cur_question_num + 6 - len(self.cur_category['questions'])) * 100 + 200, (self.cur_category_num + 1) * 75)], width=2, outline=(255, 255, 0), fill=(0, 0, 255))
             img.save(self.get_image_path())
-            print('image_altered')
             del self.pack['rounds'][self.cur_round]['categories'][self.cur_category_num]['questions'][self.cur_question_num]
 
         self.countdown_num = 0
@@ -347,19 +354,28 @@ class GameSession:
         self.cur_question = None
         self.cur_ans_player = None
         self.forbidden_to_ans = []
+        self.answer_str = None
 
     def get_forbidden(self):
         return self.forbidden_to_ans
 
     def get_questions_ans(self):
-        return random.choice(self.cur_question['correct_answers'])
+        if not self.answer_str:
+            self.answer_str = random.choice(self.cur_question['correct_answers'])
+        return self.answer_str
 
     def make_answer_pict(self):
         img = Image.new("RGB", (701, 401), (0, 0, 255))
         draw = ImageDraw.Draw(img)
         font = ImageFont.truetype('static/OpenSans.ttf', 35)
         draw.rectangle([(0, 0), (700, 400)], width=2, outline=(255, 255, 0))
-        #draw.text((i * 100 + 5, j * 75 + 15), self.pack['rounds'][self.cur_round]['categories'][j]['name'], fill=(255, 255, 0), font=font)
+        
+        lines = wrap(self.get_questions_ans(), 35)
+        y_text = 30
+        for line in lines:
+            width, height = font.getsize(line)
+            draw.text(((700 - width) / 2, y_text), line, font=font, fill=(255, 255, 0))
+            y_text += height
 
         img.save(f'temp/a{self.id}.png')
 
