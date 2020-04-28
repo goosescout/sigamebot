@@ -3,6 +3,7 @@ import os
 import json
 import pymorphy2
 import random
+import asyncio
 
 from dotenv import load_dotenv
 from discord.ext import commands
@@ -19,34 +20,54 @@ class SiGameBot(commands.Bot):
         self.games = {}
 
     async def on_message(self, message):
-        if message.channel in self.games.keys() and self.games[message.channel].get_author_requested() == message.author:
+        if message.content.startswith('si! '):
+            await self.process_commands(message)
+        elif message.channel in self.games.keys() and self.games[message.channel].get_author_requested() == message.author:
             try:
-                self.games[message.channel].get_question(message.content.split()[0], int(message.content.split()[1]))
+                self.games[message.channel].init_question(message.content.split()[0], int(message.content.split()[1]))
                 await self.ask_question(message.channel)
+            except ValueError:
+                await message.channel.send("Такого вопроса или категории не существует")
+            except IndexError:
+                await message.channel.send("Недостаточно аргументов")
             except Exception as ex:
                 await message.channel.send(ex)
-        else:
-            await self.process_commands(message)
+        elif message.channel in self.games.keys() and self.games[message.channel].get_race_requested() and message.content.strip().lower() == 'si!':
+            self.games[message.channel].cur_ans_player = message.author
+            await self.answer_question(message.channel)
 
     async def on_ready(self):
         await self.change_presence(activity=discord.Game(name="SiGame"))
 
     async def start_game(self, channel):
         cur_game = self.games[channel]
-        #morph = pymorphy2.MorphAnalyzer()
-        #word = morph.parse('секунда')[0]
         cur_round = cur_game.update_round()
         categories = cur_game.get_categories()
         str_categories = '\n'.join(map(lambda x: '• ' + x[0] + ' - ' + x[1], categories.items()))
         await channel.send(f"Начинается {cur_round} раунд\n" +
                            f"Категории раунда:\n{str_categories}", file=discord.File(cur_game.get_image_path()))
-        await channel.send(f"Игру начинает {cur_game.get_cur_player().mention}\n" +
+        members = cur_game.get_members()
+        str_members = '\n'.join(map(lambda x: '• ' + str(x[0].mention) + ' - ' + str(x[1]), members.items()))
+        await channel.send(f"Баллы игроков:\n{str_members}\n" +
+                           f"Игру начинает {cur_game.get_cur_player().mention}\n" +
                            "Вам необходимо выбрать категорию. Для этого введите: 'название категории' 'номинал вопроса' (регистр не учитывается)")
         cur_game.author_requested = cur_game.get_cur_player()
         
     async def ask_question(self, channel):
-        self.games[channel].author_requested = None
-        await channel.send(f"{self.games[channel].cur_question}")
+        cur_game = self.games[channel]
+        cur_game.author_requested = None
+        morph = pymorphy2.MorphAnalyzer()
+        word = morph.parse('секунда')[0]
+        await channel.send(f"Играем категорию {cur_game.get_cur_category(True)} за {cur_game.get_cur_question()['par']}!\n" +
+                           f"Внимание, вопрос: {cur_game.get_cur_question(True)}", file=discord.File(cur_game.get_question_path()))
+        await channel.send(f"Ответы принимаются через {cur_game.get_cur_question()['answer_time']} {word.make_agree_with_number(cur_game.get_cur_question()['answer_time']).word}.")
+        await asyncio.sleep(cur_game.get_cur_question()['answer_time'])
+        await channel.send("Время вышло!\nКто первый из игроков напишет 'si!' - тот и будет отвечать!")
+        cur_game.race_requested = True
+
+    async def answer_question(self, channel):
+        cur_game = self.games[channel]
+        await channel.send(f"{cur_game.cur_ans_player.mention} отвечает!\n(Введите ваш ответ без лишних символов)")
  
 
 class SiCommands(commands.Cog):
@@ -116,7 +137,10 @@ class GameSession:
 
         self.cur_round = -1
         self.author_requested = None
+        self.race_requested = False
+        self.cur_category = None
         self.cur_question = None
+        self.cur_ans_player = None
 
     def add_member(self, member):
         if self.joinable:
@@ -172,27 +196,56 @@ class GameSession:
     def get_image_path(self):
         return f'temp/{self.id}.png'
 
+    def get_question_path(self):
+        return f'temp/q{self.id}.png'
+
     def get_cur_player(self):
         return self.cur_player
 
     def get_author_requested(self):
         return self.author_requested
 
-    def get_question(self, category_name, par):
+    def init_question(self, category_name, par):
         found = False
         for i, category in enumerate(self.pack['rounds'][self.cur_round]['categories']):
             if category['name'] == category_name:
-                self.cur_categoty_num = i
+                self.cur_category_num = i
+                self.cur_category = category
                 for j, question in enumerate(category['questions']):
                     if question['par'] == par:
                         self.cur_question_num = j
                         self.cur_question = question
+                        self.make_question_pict()
                         found = True
                         break
             if found:
                 break
         if not found:
             raise ValueError('Такого вопроса или категории не существует')
+
+    def get_cur_question(self, text_only=False):
+        if text_only:
+            return self.cur_question['text']
+        else:
+            return self.cur_question
+
+    def get_cur_category(self, name_only=False):
+        if name_only:
+            return self.cur_category['name']
+        else:
+            return self.cur_category
+
+    def make_question_pict(self):
+        img = Image.new("RGB", (701, 401), (0, 0, 255))
+        draw = ImageDraw.Draw(img)
+        font = ImageFont.truetype('static/OpenSans.ttf', 35)
+        draw.rectangle([(0, 0), (700, 400)], width=2, outline=(255, 255, 0))
+        #draw.text((i * 100 + 5, j * 75 + 15), self.pack['rounds'][self.cur_round]['categories'][j]['name'], fill=(255, 255, 0), font=font)
+
+        img.save(f'temp/q{self.id}.png')
+
+    def get_race_requested(self):
+        return self.race_requested
 
 
 bot = SiGameBot(command_prefix='si! ')
