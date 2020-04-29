@@ -78,17 +78,28 @@ class SiGameBot(commands.Bot):
         members = cur_game.get_members()
         str_members = '\n'.join(map(lambda x: '• ' + str(x[0].mention) + ' - ' + str(x[1]), members.items()))
         if start:
-            cur_game.update_round()
-            categories = cur_game.get_categories()
-            str_categories = '\n'.join(map(lambda x: '• ' + x[0] + ' - ' + x[1], categories.items()))
-            await channel.send(f"Начинается {cur_game.get_cur_round() + 1} раунд\n" +
-                               f"Категории раунда:\n{str_categories}", file=discord.File(cur_game.get_image_path()))
+            try:
+                cur_game.update_round()
+            except ValueError:
+                await self.end_game(channel)
+            else:
+                categories = cur_game.get_categories()
+                str_categories = '\n'.join(map(lambda x: '• ' + x[0] + ' - ' + x[1], categories.items()))
+                await channel.send(f"Начинается {cur_game.get_cur_round() + 1} раунд\n" +
+                                   f"Категории раунда:\n{str_categories}", file=discord.File(cur_game.get_image_path()))
         else:
             await channel.send(f"Идёт {cur_game.get_cur_round() + 1} раунд\n", file=discord.File(cur_game.get_image_path()))
         await channel.send(f"Баллы игроков:\n{str_members}\n" +
                            f"{cur_game.get_cur_player().mention}, ваш ход\n" +
                            "Вам необходимо выбрать категорию. Для этого введите: 'название категории' 'номинал вопроса' (регистр не учитывается)")
         cur_game.author_requested = cur_game.get_cur_player()
+
+    async def end_game(self, channel):
+        if self.games[channel].get_cur_player():
+            await channel.send(f"Игра закончена!\nПобеда уходит к {self.games[channel].get_winner().mention}!")
+        else:
+            await channel.send("Игра закончена!")
+        del self.games[channel]
         
     async def ask_question(self, channel):
         cur_game = self.games[channel]
@@ -173,6 +184,10 @@ class SiCommands(commands.Cog):
                                f"В игре {'участвуют' if len(cur_game.get_members()) > 1 else 'участвует'}: {', '.join(member.mention for member in cur_game.get_members(True))}")
                 await self.bot.show_questions(ctx.channel, True)
 
+    @commands.command(name='terminate')
+    async def terminate(self, ctx):
+        await self.bot.end_game(ctx.channel)
+
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
         if isinstance(error, commands.CommandNotFound):
@@ -209,6 +224,7 @@ class GameSession:
         self.countdown_num = 0
         self.answer_str = None
         self.categories_closed = 0
+        self.cur_player = None
 
     def add_member(self, member):
         if self.joinable:
@@ -243,6 +259,8 @@ class GameSession:
 
     def update_round(self):
         self.cur_round += 1
+        if self.cur_round + 1 == len(self.pack['rounds']):
+            raise ValueError('Игра закончена')
         if self.cur_round != 0:
             self.cur_player = list(sorted(self.members.keys(), key=lambda x: self.members[x]))[-1]
         self.categories_closed = 0
@@ -397,6 +415,9 @@ class GameSession:
 
     def get_answer_path(self):
         return f'temp/a{self.id}.png'
+
+    def get_winner(self):
+        return list(sorted(self.members.keys(), key=lambda x: self.members[x]))[-1]
 
 
 bot = SiGameBot(command_prefix='si! ')
