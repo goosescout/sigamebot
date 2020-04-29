@@ -21,13 +21,13 @@ class RegisterForm(FlaskForm):
     submit = SubmitField('Log in')
 
 
-class QuestionForm(FlaskForm):
-    title = StringField('Question name', validators=[DataRequired()])
-    par = IntegerField('Value of question', validators=[DataRequired()])
-    text = TextAreaField('Question', validators=[DataRequired()])
-    ans = StringField('Possible answers', validators=[DataRequired()])
-
-
 class CategoryForm(FlaskForm):
-    title = StringField('Category name', validators=[DataRequired()])
-    description = TextAreaField('Description of category', validators=[DataRequired()])
+    category = StringField('Name of Category', validators=[DataRequired()])
+    description = TextAreaField('Description of Category', validators=[DataRequired()])
+
+
+class QuestionForm(FlaskForm):
+    text = TextAreaField('Wording of Question', validators=[DataRequired()])
+    par = IntegerField('Value of Question', validators=[DataRequired()])
+    answers = StringField('Possible answers on Question', validators=[DataRequired()])
+    time = IntegerField('Time to answer on Question', validators=[DataRequired()])
