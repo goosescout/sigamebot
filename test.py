@@ -54,9 +54,9 @@ class SiGameBot(commands.Bot):
                 await message.channel.send(f"К сожалению, это неправильный ответ. {cur_game.get_ans_player().mention} теряет {cur_game.get_cur_question()['par']} очков.")
                 await self.post_answer(message.channel)
 
-    async def post_answer(self, channel, case_1=False):
+    async def post_answer(self, channel, no_answer=False):
         cur_game = self.games[channel]
-        if cur_game.get_forbidden() == list(cur_game.get_members()) or case_1:
+        if (cur_game.get_forbidden() == list(cur_game.get_members())) or no_answer:
             await channel.send("Никто не ответил на вопрос. Вопрос снимается.")
             cur_game.make_answer_pict()
             await channel.send(f"Правильный ответ был: {cur_game.get_questions_ans()}", file=discord.File(cur_game.get_answer_path()))
@@ -243,6 +243,9 @@ class GameSession:
 
     def update_round(self):
         self.cur_round += 1
+        if self.cur_round != 0:
+            self.cur_player = list(sorted(self.members.keys(), key=lambda x: self.members[x]))[-1]
+        self.categories_closed = 0
         self.create_table_image()
         return self.cur_round + 1
 
