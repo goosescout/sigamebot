@@ -67,8 +67,8 @@ def register():
     return render_template('register.html', title='Registration', form=form)
 
 
-@app.route('/game/<int:game_id>/category', methods=['GET', 'POST'])
-def game(game_id):
+@app.route('/game/<int:game_id>/rounds/<int:round>/category', methods=['GET', 'POST'])
+def game(game_id, round):
     session = db_session.create_session()
     form_category_1 = CategoryForm()
     form_question_1_1 = QuestionForm()
@@ -76,57 +76,68 @@ def game(game_id):
     form_question_1_3 = QuestionForm()
     form_question_1_4 = QuestionForm()
     form_question_1_5 = QuestionForm()
+    game = session.query(Pack).filter((Pack.id == game_id)).first()
+    if not game:
+        with open(f'/Users/alekseyostrovskiy/Desktop/sigamebot/games/{game_id}.json', 'w', encoding='utf-8') as f:
+            # проверка на повторение
+            pack = Pack(
+                game=f'/Users/alekseyostrovskiy/Desktop/sigamebot/games/{game_id}.json',
+                user_id=current_user.id
+            )
+            session.add(pack)
+            session.commit()
+            data = {
+                "rounds": [
+                    {
+                        "categories": [
+
+                        ]
+                    }
+                ]
+            }
+            json.dump(data, f, indent=4)
+        # до сюда
+    another_data = ({
+        "name": form_category_1.category.data,
+        "description": form_category_1.description.data,
+        "questions": [
+            {
+                "text": form_question_1_1.text.data,
+                "par": form_question_1_1.par.data,
+                "correct_answers": form_question_1_1.answers.data,
+                "answer_time": form_question_1_1.time.data
+            },
+            {
+                "text": form_question_1_2.text.data,
+                "par": form_question_1_2.par.data,
+                "correct_answers": form_question_1_2.answers.data,
+                "answer_time": form_question_1_2.time.data
+            },
+            {
+                "text": form_question_1_3.text.data,
+                "par": form_question_1_3.par.data,
+                "correct_answers": form_question_1_3.answers.data,
+                "answer_time": form_question_1_3.time.data
+            },
+            {
+                "text": form_question_1_4.text.data,
+                "par": form_question_1_4.par.data,
+                "correct_answers": form_question_1_4.answers.data,
+                "answer_time": form_question_1_4.time.data
+            },
+            {
+                "text": form_question_1_5.text.data,
+                "par": form_question_1_5.par.data,
+                "correct_answers": form_question_1_5.answers.data,
+                "answer_time": form_question_1_5.time.data
+            }
+        ]
+    }, )
+    with open(f'/Users/alekseyostrovskiy/Desktop/sigamebot/games/{game_id}.json', encoding='utf-8') as f:
+        data = json.load(f)
+    data["rounds"][round - 1]["categories"] += list(another_data)
     with open(f'/Users/alekseyostrovskiy/Desktop/sigamebot/games/{game_id}.json', 'w', encoding='utf-8') as f:
-        pack = Pack(
-            game=f'/Users/alekseyostrovskiy/Desktop/sigamebot/games/{game_id}.json'
-        )
-        session.add(pack)
-        session.commit()
-        data = {
-            "rounds": [
-                {
-                    "categories": [
-                        {
-                            "name": form_category_1.category.data,
-                            "description": form_category_1.description.data,
-                            "questions": [
-                                {
-                                    "text": form_question_1_1.text.data,
-                                    "par": form_question_1_1.par.data,
-                                    "correct_answers": form_question_1_1.answers.data,
-                                    "answer_time": form_question_1_1.time.data
-                                },
-                                {
-                                    "text": form_question_1_2.text.data,
-                                    "par": form_question_1_2.par.data,
-                                    "correct_answers": form_question_1_2.answers.data,
-                                    "answer_time": form_question_1_2.time.data
-                                },
-                                {
-                                    "text": form_question_1_3.text.data,
-                                    "par": form_question_1_3.par.data,
-                                    "correct_answers": form_question_1_3.answers.data,
-                                    "answer_time": form_question_1_3.time.data
-                                },
-                                {
-                                    "text": form_question_1_4.text.data,
-                                    "par": form_question_1_4.par.data,
-                                    "correct_answers": form_question_1_4.answers.data,
-                                    "answer_time": form_question_1_4.time.data
-                                },
-                                {
-                                    "text": form_question_1_5.text.data,
-                                    "par": form_question_1_5.par.data,
-                                    "correct_answers": form_question_1_5.answers.data,
-                                    "answer_time": form_question_1_5.time.data
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ]
-        }
-        json.dump(data, f)
+        json.dump(data, f, indent=4)
     return render_template('game.html', title='Game editing',
                            form_category_1=form_category_1,
                            form_question_1_1=form_question_1_1,
