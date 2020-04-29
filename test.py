@@ -25,14 +25,12 @@ class SiGameBot(commands.Bot):
             await self.process_commands(message)
         elif message.channel in self.games.keys() and self.games[message.channel].get_author_requested() == message.author:
             try:
-                self.games[message.channel].init_question(message.content.split()[0], int(message.content.split()[1]))
+                self.games[message.channel].init_question(message.content.lower().split()[0], int(message.content.split()[1]))
                 await self.ask_question(message.channel)
             except ValueError:
                 await message.channel.send("Такого вопроса или категории не существует")
             except IndexError:
                 await message.channel.send("Недостаточно аргументов")
-            except Exception as ex:
-                await message.channel.send(ex)
         elif message.channel in self.games.keys() and self.games[message.channel].get_race_requested() and message.content.strip().lower() == 'si!' and self.games[message.channel].is_member(message.author):
             if message.author in self.games[message.channel].get_forbidden():
                 await message.channel.send(f"{message.author.mention}, вы уже отвечали")
@@ -99,6 +97,7 @@ class SiGameBot(commands.Bot):
             await channel.send(f"Игра закончена!\nПобеда уходит к {self.games[channel].get_winner().mention}!")
         else:
             await channel.send("Игра закончена!")
+        self.games[channel].end_game()
         del self.games[channel]
         
     async def ask_question(self, channel):
@@ -259,7 +258,8 @@ class GameSession:
 
     def update_round(self):
         self.cur_round += 1
-        if self.cur_round + 1 == len(self.pack['rounds']):
+        if self.cur_round == len(self.pack['rounds']):
+            self.end_game()
             raise ValueError('Игра закончена')
         if self.cur_round != 0:
             self.cur_player = list(sorted(self.members.keys(), key=lambda x: self.members[x]))[-1]
@@ -287,6 +287,14 @@ class GameSession:
                     draw.text((i * 100 + 115, j * 75 + 15), str(self.pack['rounds'][self.cur_round]['categories'][j]['questions'][i - 1]['par']), fill=(255, 255, 0), font=font)
 
         img.save(f'temp/{self.id}.png')
+
+    def end_game(self):
+        try:
+            os.remove(f'temp/{self.id}.png')
+            os.remove(f'temp/q{self.id}.png')
+            os.remove(f'temp/a{self.id}.png')
+        except Exception:
+            pass
 
     def get_image_path(self):
         return f'temp/{self.id}.png'
