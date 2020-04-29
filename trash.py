@@ -207,3 +207,32 @@ form_question_6_3=form_question_6_3,
 form_question_6_4=form_question_6_4,
 form_question_6_5=form_question_6_5
 '''
+'''
+        pack['categories'][category_num]['name'] = form_category_1.category.data
+        pack['categories'][category_num]['description'] = form_category_1.description.data
+
+        pack['categories'][category_num]['questions'][0]['text'] = form_question_1_1.text.data
+        pack['categories'][category_num]['questions'][0]['par'] = form_question_1_1.par.data
+        pack['categories'][category_num]['questions'][0]['correct_answers'] = form_question_1_1.answers.data.split(', ')
+        pack['categories'][category_num]['questions'][0]['answer_time'] = form_question_1_1.time.data
+
+        pack['categories'][category_num]['questions'][1]['text'] = form_question_1_2.text.data
+        pack['categories'][category_num]['questions'][1]['par'] = form_question_1_2.par.data
+        pack['categories'][category_num]['questions'][1]['correct_answers'] = form_question_1_2.answers.data.split(', ')
+        pack['categories'][category_num]['questions'][1]['answer_time'] = form_question_1_2.time.data
+
+        pack['categories'][category_num]['questions'][2]['text'] = form_question_1_3.text.data
+        pack['categories'][category_num]['questions'][2]['par'] = form_question_1_3.par.data
+        pack['categories'][category_num]['questions'][2]['correct_answers'] = form_question_1_3.answers.data.split(', ')
+        pack['categories'][category_num]['questions'][2]['answer_time'] = form_question_1_3.time.data
+
+        pack['categories'][category_num]['questions'][3]['text'] = form_question_1_4.text.data
+        pack['categories'][category_num]['questions'][3]['par'] = form_question_1_4.par.data
+        pack['categories'][category_num]['questions'][3]['correct_answers'] = form_question_1_4.answers.data.split(', ')
+        pack['categories'][category_num]['questions'][3]['answer_time'] = form_question_1_4.time.data
+
+        pack['categories'][category_num]['questions'][4]['text'] = form_question_1_5.text.data
+        pack['categories'][category_num]['questions'][4]['par'] = form_question_1_5.par.data
+        pack['categories'][category_num]['questions'][4]['correct_answers'] = form_question_1_5.answers.data.split(', ')
+        pack['categories'][category_num]['questions'][4]['answer_time'] = form_question_1_5.time.data
+        '''

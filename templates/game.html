@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Register Form</h1>
+<h1>Pack Making</h1>
+<h4>Category</h4>
 <form action="" method="post">
     {{ form_category_1.hidden_tag() }}
     {{ form_category_1.csrf_token }}
@@ -24,6 +25,7 @@
     {% endfor %}
     </p>
 </form>
+<h4>Question #1</h4>
 <form action="" method="post">
     {{ form_question_1_1.hidden_tag() }}
     {{ form_question_1_1.csrf_token }}
@@ -64,6 +66,7 @@
     {% endfor %}
     </p>
 </form>
+<h4>Question #2</h4>
 <form action="" method="post">
     {{ form_question_1_2.hidden_tag() }}
     {{ form_question_1_2.csrf_token }}
@@ -104,6 +107,7 @@
     {% endfor %}
     </p>
 </form>
+<h4>Question #3</h4>
 <form action="" method="post">
     {{ form_question_1_3.hidden_tag() }}
     {{ form_question_1_3.csrf_token }}
@@ -144,6 +148,7 @@
     {% endfor %}
     </p>
 </form>
+<h4>Question #4</h4>
 <form action="" method="post">
     {{ form_question_1_4.hidden_tag() }}
     {{ form_question_1_4.csrf_token }}
@@ -184,6 +189,7 @@
     {% endfor %}
     </p>
 </form>
+<h4>Question #5</h4>
 <form action="" method="post">
     {{ form_question_1_5.hidden_tag() }}
     {{ form_question_1_5.csrf_token }}

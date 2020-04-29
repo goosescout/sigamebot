@@ -67,8 +67,8 @@ def register():
     return render_template('register.html', title='Registration', form=form)
 
 
-@app.route('/game/<int:game_id>/category/<int:category_num>', methods=['GET', 'POST'])
-def game(game_id, category_num):
+@app.route('/game/<int:game_id>/category', methods=['GET', 'POST'])
+def game(game_id):
     session = db_session.create_session()
     form_category_1 = CategoryForm()
     form_question_1_1 = QuestionForm()
@@ -82,37 +82,51 @@ def game(game_id, category_num):
         )
         session.add(pack)
         session.commit()
-
-        data = json.loads(f.read())
-        data['categories'][category_num]['name'] = form_category_1.category.data
-        data['categories'][category_num]['description'] = form_category_1.description.data
-
-        data['categories'][category_num]['questions'][0]['text'] = form_question_1_1.text.data
-        data['categories'][category_num]['questions'][0]['par'] = form_question_1_1.par.data
-        data['categories'][category_num]['questions'][0]['correct_answers'] = form_question_1_1.answers.data.split(', ')
-        data['categories'][category_num]['questions'][0]['answer_time'] = form_question_1_1.time.data
-
-        data['categories'][category_num]['questions'][1]['text'] = form_question_1_2.text.data
-        data['categories'][category_num]['questions'][1]['par'] = form_question_1_2.par.data
-        data['categories'][category_num]['questions'][1]['correct_answers'] = form_question_1_2.answers.data.split(', ')
-        data['categories'][category_num]['questions'][1]['answer_time'] = form_question_1_2.time.data
-
-        data['categories'][category_num]['questions'][2]['text'] = form_question_1_3.text.data
-        data['categories'][category_num]['questions'][2]['par'] = form_question_1_3.par.data
-        data['categories'][category_num]['questions'][2]['correct_answers'] = form_question_1_3.answers.data.split(', ')
-        data['categories'][category_num]['questions'][2]['answer_time'] = form_question_1_3.time.data
-
-        data['categories'][category_num]['questions'][3]['text'] = form_question_1_4.text.data
-        data['categories'][category_num]['questions'][3]['par'] = form_question_1_4.par.data
-        data['categories'][category_num]['questions'][3]['correct_answers'] = form_question_1_4.answers.data.split(', ')
-        data['categories'][category_num]['questions'][3]['answer_time'] = form_question_1_4.time.data
-
-        data['categories'][category_num]['questions'][4]['text'] = form_question_1_5.text.data
-        data['categories'][category_num]['questions'][4]['par'] = form_question_1_5.par.data
-        data['categories'][category_num]['questions'][4]['correct_answers'] = form_question_1_5.answers.data.split(', ')
-        data['categories'][category_num]['questions'][4]['answer_time'] = form_question_1_5.time.data
-        print(json.dumps(data, ensure_ascii=False, indent=4))
-
+        data = {
+            "rounds": [
+                {
+                    "categories": [
+                        {
+                            "name": form_category_1.category.data,
+                            "description": form_category_1.description.data,
+                            "questions": [
+                                {
+                                    "text": form_question_1_1.text.data,
+                                    "par": form_question_1_1.par.data,
+                                    "correct_answers": form_question_1_1.answers.data,
+                                    "answer_time": form_question_1_1.time.data
+                                },
+                                {
+                                    "text": form_question_1_2.text.data,
+                                    "par": form_question_1_2.par.data,
+                                    "correct_answers": form_question_1_2.answers.data,
+                                    "answer_time": form_question_1_2.time.data
+                                },
+                                {
+                                    "text": form_question_1_3.text.data,
+                                    "par": form_question_1_3.par.data,
+                                    "correct_answers": form_question_1_3.answers.data,
+                                    "answer_time": form_question_1_3.time.data
+                                },
+                                {
+                                    "text": form_question_1_4.text.data,
+                                    "par": form_question_1_4.par.data,
+                                    "correct_answers": form_question_1_4.answers.data,
+                                    "answer_time": form_question_1_4.time.data
+                                },
+                                {
+                                    "text": form_question_1_5.text.data,
+                                    "par": form_question_1_5.par.data,
+                                    "correct_answers": form_question_1_5.answers.data,
+                                    "answer_time": form_question_1_5.time.data
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+        json.dump(data, f)
     return render_template('game.html', title='Game editing',
                            form_category_1=form_category_1,
                            form_question_1_1=form_question_1_1,
