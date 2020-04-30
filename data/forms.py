@@ -24,6 +24,7 @@ class RegisterForm(FlaskForm):
 class CategoryForm(FlaskForm):
     category = StringField('Name of Category', validators=[DataRequired()])
     description = TextAreaField('Description of Category', validators=[DataRequired()])
+    submit = SubmitField('Add Category')
 
 
 class QuestionForm(FlaskForm):
