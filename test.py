@@ -87,10 +87,11 @@ class SiGameBot(commands.Bot):
                                    f"Категории раунда:\n{str_categories}", file=discord.File(cur_game.get_image_path()))
         else:
             await channel.send(f"Идёт {cur_game.get_cur_round() + 1} раунд\n", file=discord.File(cur_game.get_image_path()))
-        await channel.send(f"Баллы игроков:\n{str_members}\n" +
-                           f"{cur_game.get_cur_player().mention}, ваш ход\n" +
-                           "Вам необходимо выбрать категорию. Для этого введите: 'название категории' 'номинал вопроса' (регистр не учитывается)")
-        cur_game.author_requested = cur_game.get_cur_player()
+        if cur_game:
+            await channel.send(f"Баллы игроков:\n{str_members}\n" +
+                            f"{cur_game.get_cur_player().mention}, ваш ход\n" +
+                            "Вам необходимо выбрать категорию. Для этого введите: 'название категории' 'номинал вопроса' (регистр не учитывается)")
+            cur_game.author_requested = cur_game.get_cur_player()
 
     async def end_game(self, channel):
         if self.games[channel].get_cur_player():
@@ -146,6 +147,10 @@ class SiCommands(commands.Cog):
 
     @commands.command(name='start')
     async def start(self, ctx, pack_name):
+        '''
+        Начинает игру.
+        После команды необходимо написать название пака (например: 'si! start example').
+        '''
         if ctx.message.channel in self.bot.games.keys():
             await ctx.send("Игра в этом канале уже началась")
             return
@@ -160,6 +165,9 @@ class SiCommands(commands.Cog):
 
     @commands.command(name='join')
     async def join(self, ctx):
+        '''
+        Присоединяет написавшего к игре (если идёт сбор игроков).
+        '''
         if ctx.channel in self.bot.games.keys():
             try:
                 self.bot.games[ctx.channel].add_member(ctx.message.author)
@@ -170,6 +178,9 @@ class SiCommands(commands.Cog):
 
     @commands.command(name='end')
     async def end(self, ctx):
+        '''
+        Завершает сбор игроков.
+        '''
         if ctx.channel in self.bot.games.keys():
             cur_game = self.bot.games[ctx.channel]
             try:
@@ -183,16 +194,34 @@ class SiCommands(commands.Cog):
                                f"В игре {'участвуют' if len(cur_game.get_members()) > 1 else 'участвует'}: {', '.join(member.mention for member in cur_game.get_members(True))}")
                 await self.bot.show_questions(ctx.channel, True)
 
-    @commands.command(name='terminate')
-    async def terminate(self, ctx):
-        await self.bot.end_game(ctx.channel)
+    @commands.command(name='exit')
+    async def exit_(self, ctx):
+        '''
+        Выход из текущей игры.
+        '''
+        if ctx.message.channel not in self.bot.games.keys():
+            await ctx.send("Нельзя выйти из игры, которой нет")
+        else:
+            cur_game = self.bot.games[ctx.message.channel]
+            try:
+                cur_game.exit(ctx.message.author)
+                await ctx.send(f"{ctx.message.author.mention}, вы успешно вышли из игры")
+                if not cur_game.get_members() and not cur_game.is_joinable():
+                    cur_game.end_game()
+                    del self.bot.games[ctx.message.channel]
+                    await ctx.send("Игра закончилась!")
+                if cur_game.get_ans_player() == ctx.message.author:
+                    cur_game.reset_cur_player()
+                    await self.bot.post_answer(ctx.message.channel)
+            except IndexError:
+                await ctx.send('Вы не в игре')
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
         if isinstance(error, commands.CommandNotFound):
             await ctx.send(f"Такой команды не существует")
-        else:
-            await ctx.send(f"{error} (фича для дебага. В дальнейшем такого не будет)")
+        elif isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send(f"Недостаточно аргументов для команды")
 
 
 class GameSession:
@@ -295,6 +324,9 @@ class GameSession:
             os.remove(f'temp/a{self.id}.png')
         except Exception:
             pass
+
+    def reset_cur_player(self):
+        self.cur_player = list(sorted(self.members.keys(), key=lambda x: self.members[x]))[-1]
 
     def get_image_path(self):
         return f'temp/{self.id}.png'
@@ -426,6 +458,9 @@ class GameSession:
 
     def get_winner(self):
         return list(sorted(self.members.keys(), key=lambda x: self.members[x]))[-1]
+
+    def exit(self, member):
+        del self.members[member]
 
 
 bot = SiGameBot(command_prefix='si! ')
