@@ -1,0 +1,156 @@
+{
+    "rounds": [
+        {
+            "categories": [
+                {
+                    "name": "test1",
+                    "description": "test",
+                    "questions": [
+                        {
+                            "text": "На этот раз текст будет большим. Я правда говорю, что он большой. Ну просто оооооочень большой. Посмторим, что ты скажешь на этот счет.",
+                            "par": 100,
+                            "correct_answers": ["test1", "test2", "test3", "test4"],
+                            "answer_time": 5
+                        },
+                        {
+                            "text": "2",
+                            "par": 200,
+                            "correct_answers": ["test", "test"],
+                            "answer_time": 5
+                        },
+                        {
+                            "text": "3",
+                            "par": 300,
+                            "correct_answers": ["test", "test"],
+                            "answer_time": 5
+                        },
+                        {
+                            "text": "test",
+                            "par": 400,
+                            "correct_answers": ["test", "test"],
+                            "answer_time": 5
+                        },
+                        {
+                            "text": "test",
+                            "par": 500,
+                            "correct_answers": ["test", "test"],
+                            "answer_time": 5
+                        }
+                    ]
+                },
+                {
+                    "name": "test2",
+                    "description": "test",
+                    "questions": [
+                        {
+                            "text": "test",
+                            "par": 100,
+                            "correct_answers": ["test", "test"],
+                            "answer_time": 5
+                        },
+                        {
+                            "text": "test",
+                            "par": 200,
+                            "correct_answers": ["test", "test"],
+                            "answer_time": 5
+                        },
+                        {
+                            "text": "test",
+                            "par": 300,
+                            "correct_answers": ["test", "test"],
+                            "answer_time": 5
+                        },
+                        {
+                            "text": "test",
+                            "par": 400,
+                            "correct_answers": ["test", "test"],
+                            "answer_time": 5
+                        },
+                        {
+                            "text": "test",
+                            "par": 500,
+                            "correct_answers": ["test", "test"],
+                            "answer_time": 5
+                        }
+                    ]
+                },
+                {
+                    "name": "test3",
+                    "description": "test",
+                    "questions": [
+                        {
+                            "text": "test",
+                            "par": 100,
+                            "correct_answers": ["test", "test"],
+                            "answer_time": 5
+                        },
+                        {
+                            "text": "test",
+                            "par": 100,
+                            "correct_answers": ["test", "test"],
+                            "answer_time": 5
+                        },
+                        {
+                            "text": "test",
+                            "par": 100,
+                            "correct_answers": ["test", "test"],
+                            "answer_time": 5
+                        },
+                        {
+                            "text": "test",
+                            "par": 100,
+                            "correct_answers": ["test", "test"],
+                            "answer_time": 5
+                        },
+                        {
+                            "text": "test",
+                            "par": 100,
+                            "correct_answers": ["test", "test"],
+                            "answer_time": 5
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "categories": [
+                {
+                    "name": "test1",
+                    "description": "test",
+                    "questions": [
+                        {
+                            "text": "test",
+                            "par": 100,
+                            "correct_answers": ["test", "test"],
+                            "answer_time": 5
+                        },
+                        {
+                            "text": "test",
+                            "par": 100,
+                            "correct_answers": ["test", "test"],
+                            "answer_time": 5
+                        }
+                    ]
+                },
+                {
+                    "name": "test2",
+                    "description": "test",
+                    "questions": [
+                        {
+                            "text": "test",
+                            "par": 100,
+                            "correct_answers": ["test", "test"],
+                            "answer_time": 5
+                        },
+                        {
+                            "text": "test",
+                            "par": 100,
+                            "correct_answers": ["test", "test"],
+                            "answer_time": 5
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
