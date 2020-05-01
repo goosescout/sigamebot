@@ -4,230 +4,213 @@
 <h1>Pack Making</h1>
 <h4>Category</h4>
 <form action="" method="post">
-    {{ form_category.hidden_tag() }}
-    {{ form_category.csrf_token }}
+    {{ game_form.hidden_tag() }}
+    {{ game_form.csrf_token }}
     <p>
-        {{ form_category.category.label }}<br>
-        {{ form_category.category(class="form-control") }}<br>
-        {% for error in form_category.category.errors %}
+        {{ game_form.category.label }}<br>
+        {{ game_form.category(class="form-control") }}<br>
+        {% for error in game_form.category.errors %}
     <p class="alert alert-danger" role="alert">
         {{ error }}
     </p>
     {% endfor %}
     </p>
     <p>
-        {{ form_category.description.label }}<br>
-        {{ form_category.description(class="form-control") }}<br>
-        {% for error in form_category.description.errors %}
+        {{ game_form.description.label }}<br>
+        {{ game_form.description(class="form-control") }}<br>
+        {% for error in game_form.description.errors %}
     <p class="alert alert-danger" role="alert">
         {{ error }}
     </p>
     {% endfor %}
     </p>
     <h4>Question #1</h4>
-</form>
-<form action="" method="post">
-    {{ form_question_1.hidden_tag() }}
-    {{ form_question_1.csrf_token }}
     <p>
-        {{ form_question_1.text.label }}<br>
-        {{ form_question_1.text(class="form-control") }}<br>
-        {% for error in form_question_1.text.errors %}
+        {{ game_form.text.label }}<br>
+        {{ game_form.text(class="form-control") }}<br>
+        {% for error in game_form.text.errors %}
     <p class="alert alert-danger" role="alert">
         {{ error }}
     </p>
     {% endfor %}
     </p>
     <p>
-        {{ form_question_1.par.label }}<br>
-        {{ form_question_1.par(class="form-control") }}<br>
-        {% for error in form_question_1.par.errors %}
+        {{ game_form.par.label }}<br>
+        {{ game_form.par(class="form-control") }}<br>
+        {% for error in game_form.par.errors %}
     <p class="alert alert-danger" role="alert">
         {{ error }}
     </p>
     {% endfor %}
     </p>
     <p>
-        {{ form_question_1.answers.label }}<br>
-        {{ form_question_1.answers(class="form-control") }}<br>
-        {% for error in form_question_1.answers.errors %}
+        {{ game_form.answers.label }}<br>
+        {{ game_form.answers(class="form-control") }}<br>
+        {% for error in game_form.answers.errors %}
     <p class="alert alert-danger" role="alert">
         {{ error }}
     </p>
     {% endfor %}
     </p>
     <p>
-        {{ form_question_1.time.label }}<br>
-        {{ form_question_1.time(class="form-control") }}<br>
-        {% for error in form_question_1.time.errors %}
+        {{ game_form.time.label }}<br>
+        {{ game_form.time(class="form-control") }}<br>
+        {% for error in game_form.time.errors %}
     <p class="alert alert-danger" role="alert">
         {{ error }}
     </p>
     {% endfor %}
     </p>
-</form>
-<h4>Question #2</h4>
-<form action="" method="post">
-    {{ form_question_2.hidden_tag() }}
-    {{ form_question_2.csrf_token }}
+    <h4>Question #2</h4>
     <p>
-        {{ form_question_2.text.label }}<br>
-        {{ form_question_2.text(class="form-control") }}<br>
-        {% for error in form_question_2.text.errors %}
+        {{ game_form.text_1.label }}<br>
+        {{ game_form.text_1(class="form-control") }}<br>
+        {% for error in game_form.text_1.errors %}
     <p class="alert alert-danger" role="alert">
         {{ error }}
     </p>
     {% endfor %}
     </p>
     <p>
-        {{ form_question_2.par.label }}<br>
-        {{ form_question_2.par(class="form-control") }}<br>
-        {% for error in form_question_2.par.errors %}
+        {{ game_form.par_1.label }}<br>
+        {{ game_form.par_1(class="form-control") }}<br>
+        {% for error in game_form.par_1.errors %}
     <p class="alert alert-danger" role="alert">
         {{ error }}
     </p>
     {% endfor %}
     </p>
     <p>
-        {{ form_question_2.answers.label }}<br>
-        {{ form_question_2.answers(class="form-control") }}<br>
-        {% for error in form_question_2.answers.errors %}
+        {{ game_form.answers_1.label }}<br>
+        {{ game_form.answers_1(class="form-control") }}<br>
+        {% for error in game_form.answers_1.errors %}
     <p class="alert alert-danger" role="alert">
         {{ error }}
     </p>
     {% endfor %}
     </p>
     <p>
-        {{ form_question_2.time.label }}<br>
-        {{ form_question_2.time(class="form-control") }}<br>
-        {% for error in form_question_2.time.errors %}
+        {{ game_form.time_1.label }}<br>
+        {{ game_form.time_1(class="form-control") }}<br>
+        {% for error in game_form.time_1.errors %}
     <p class="alert alert-danger" role="alert">
         {{ error }}
     </p>
     {% endfor %}
     </p>
-</form>
-<h4>Question #3</h4>
-<form action="" method="post">
-    {{ form_question_3.hidden_tag() }}
-    {{ form_question_3.csrf_token }}
+    <h4>Question #3</h4>
     <p>
-        {{ form_question_3.text.label }}<br>
-        {{ form_question_3.text(class="form-control") }}<br>
-        {% for error in form_question_3.text.errors %}
+        {{ game_form.text_2.label }}<br>
+        {{ game_form.text_2(class="form-control") }}<br>
+        {% for error in game_form.text_2.errors %}
     <p class="alert alert-danger" role="alert">
         {{ error }}
     </p>
     {% endfor %}
     </p>
     <p>
-        {{ form_question_3.par.label }}<br>
-        {{ form_question_3.par(class="form-control") }}<br>
-        {% for error in form_question_3.par.errors %}
+        {{ game_form.par_2.label }}<br>
+        {{ game_form.par_2(class="form-control") }}<br>
+        {% for error in game_form.par_2.errors %}
     <p class="alert alert-danger" role="alert">
         {{ error }}
     </p>
     {% endfor %}
     </p>
     <p>
-        {{ form_question_3.answers.label }}<br>
-        {{ form_question_3.answers(class="form-control") }}<br>
-        {% for error in form_question_3.answers.errors %}
+        {{ game_form.answers_2.label }}<br>
+        {{ game_form.answers_2(class="form-control") }}<br>
+        {% for error in game_form.answers_2.errors %}
     <p class="alert alert-danger" role="alert">
         {{ error }}
     </p>
     {% endfor %}
     </p>
     <p>
-        {{ form_question_3.time.label }}<br>
-        {{ form_question_3.time(class="form-control") }}<br>
-        {% for error in form_question_3.time.errors %}
+        {{ game_form.time_2.label }}<br>
+        {{ game_form.time_2(class="form-control") }}<br>
+        {% for error in game_form.time_2.errors %}
     <p class="alert alert-danger" role="alert">
         {{ error }}
     </p>
     {% endfor %}
     </p>
-</form>
-<h4>Question #4</h4>
-<form action="" method="post">
-    {{ form_question_4.hidden_tag() }}
-    {{ form_question_4.csrf_token }}
+    <h4>Question #4</h4>
     <p>
-        {{ form_question_4.text.label }}<br>
-        {{ form_question_4.text(class="form-control") }}<br>
-        {% for error in form_question_4.text.errors %}
+        {{ game_form.text_3.label }}<br>
+        {{ game_form.text_3(class="form-control") }}<br>
+        {% for error in game_form.text_3.errors %}
     <p class="alert alert-danger" role="alert">
         {{ error }}
     </p>
     {% endfor %}
     </p>
     <p>
-        {{ form_question_4.par.label }}<br>
-        {{ form_question_4.par(class="form-control") }}<br>
-        {% for error in form_question_4.par.errors %}
+        {{ game_form.par_3.label }}<br>
+        {{ game_form.par_3(class="form-control") }}<br>
+        {% for error in game_form.par_3.errors %}
     <p class="alert alert-danger" role="alert">
         {{ error }}
     </p>
     {% endfor %}
     </p>
     <p>
-        {{ form_question_4.answers.label }}<br>
-        {{ form_question_4.answers(class="form-control") }}<br>
-        {% for error in form_question_4.answers.errors %}
+        {{ game_form.answers_3.label }}<br>
+        {{ game_form.answers_3(class="form-control") }}<br>
+        {% for error in game_form.answers_3.errors %}
     <p class="alert alert-danger" role="alert">
         {{ error }}
     </p>
     {% endfor %}
     </p>
     <p>
-        {{ form_question_4.time.label }}<br>
-        {{ form_question_4.time(class="form-control") }}<br>
-        {% for error in form_question_4.time.errors %}
+        {{ game_form.time_3.label }}<br>
+        {{ game_form.time_3(class="form-control") }}<br>
+        {% for error in game_form.time_3.errors %}
     <p class="alert alert-danger" role="alert">
         {{ error }}
     </p>
     {% endfor %}
     </p>
-</form>
-<h4>Question #5</h4>
-<form action="" method="post">
-    {{ form_question_5.hidden_tag() }}
-    {{ form_question_5.csrf_token }}
+    <h4>Question #5</h4>
     <p>
-        {{ form_question_5.text.label }}<br>
-        {{ form_question_5.text(class="form-control") }}<br>
-        {% for error in form_question_5.text.errors %}
+        {{ game_form.text_4.label }}<br>
+        {{ game_form.text_4(class="form-control") }}<br>
+        {% for error in game_form.text_4.errors %}
     <p class="alert alert-danger" role="alert">
         {{ error }}
     </p>
     {% endfor %}
     </p>
     <p>
-        {{ form_question_5.par.label }}<br>
-        {{ form_question_5.par(class="form-control") }}<br>
-        {% for error in form_question_5.par.errors %}
+        {{ game_form.par_4.label }}<br>
+        {{ game_form.par_4(class="form-control") }}<br>
+        {% for error in game_form.par_4.errors %}
     <p class="alert alert-danger" role="alert">
         {{ error }}
     </p>
     {% endfor %}
     </p>
     <p>
-        {{ form_question_5.answers.label }}<br>
-        {{ form_question_5.answers(class="form-control") }}<br>
-        {% for error in form_question_5.answers.errors %}
+        {{ game_form.answers_4.label }}<br>
+        {{ game_form.answers_4(class="form-control") }}<br>
+        {% for error in game_form.answers_4.errors %}
     <p class="alert alert-danger" role="alert">
         {{ error }}
     </p>
     {% endfor %}
     </p>
     <p>
-        {{ form_question_5.time.label }}<br>
-        {{ form_question_5.time(class="form-control") }}<br>
-        {% for error in form_question_5.time.errors %}
+        {{ game_form.time_4.label }}<br>
+        {{ game_form.time_4(class="form-control") }}<br>
+        {% for error in game_form.time_4.errors %}
     <p class="alert alert-danger" role="alert">
         {{ error }}
     </p>
     {% endfor %}
     </p>
+    <p>{{ game_form.category_submit(type="submit", class="btn btn-primary") }}</p>
+    <p>{{ game_form.round_submit(type="submit", class="btn btn-primary") }}</p>
+    <p>{{ game_form.finish_submit(type="submit", class="btn btn-primary") }}</p>
 </form>
 {% endblock %}

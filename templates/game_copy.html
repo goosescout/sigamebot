@@ -1,0 +1,234 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Pack Making</h1>
+<h4>Category</h4>
+<form action="" method="post">
+    {{ form_category.hidden_tag() }}
+    {{ form_category.csrf_token }}
+    <p>
+        {{ form_category.category.label }}<br>
+        {{ form_category.category(class="form-control") }}<br>
+        {% for error in form_category.category.errors %}
+    <p class="alert alert-danger" role="alert">
+        {{ error }}
+    </p>
+    {% endfor %}
+    </p>
+    <p>
+        {{ form_category.description.label }}<br>
+        {{ form_category.description(class="form-control") }}<br>
+        {% for error in form_category.description.errors %}
+    <p class="alert alert-danger" role="alert">
+        {{ error }}
+    </p>
+    {% endfor %}
+    </p>
+    <p>{{ form_category.submit(type="submit", class="btn btn-primary") }}</p>
+</form>
+<h4>Question #1</h4>
+<form action="" method="post">
+    {{ form_question_1.hidden_tag() }}
+    {{ form_question_1.csrf_token }}
+    <p>
+        {{ form_question_1.text.label }}<br>
+        {{ form_question_1.text(class="form-control") }}<br>
+        {% for error in form_question_1.text.errors %}
+    <p class="alert alert-danger" role="alert">
+        {{ error }}
+    </p>
+    {% endfor %}
+    </p>
+    <p>
+        {{ form_question_1.par.label }}<br>
+        {{ form_question_1.par(class="form-control") }}<br>
+        {% for error in form_question_1.par.errors %}
+    <p class="alert alert-danger" role="alert">
+        {{ error }}
+    </p>
+    {% endfor %}
+    </p>
+    <p>
+        {{ form_question_1.answers.label }}<br>
+        {{ form_question_1.answers(class="form-control") }}<br>
+        {% for error in form_question_1.answers.errors %}
+    <p class="alert alert-danger" role="alert">
+        {{ error }}
+    </p>
+    {% endfor %}
+    </p>
+    <p>
+        {{ form_question_1.time.label }}<br>
+        {{ form_question_1.time(class="form-control") }}<br>
+        {% for error in form_question_1.time.errors %}
+    <p class="alert alert-danger" role="alert">
+        {{ error }}
+    </p>
+    {% endfor %}
+    </p>
+</form>
+<h4>Question #2</h4>
+<form action="" method="post">
+    {{ form_question_2.hidden_tag() }}
+    {{ form_question_2.csrf_token }}
+    <p>
+        {{ form_question_2.text.label }}<br>
+        {{ form_question_2.text(class="form-control") }}<br>
+        {% for error in form_question_2.text.errors %}
+    <p class="alert alert-danger" role="alert">
+        {{ error }}
+    </p>
+    {% endfor %}
+    </p>
+    <p>
+        {{ form_question_2.par.label }}<br>
+        {{ form_question_2.par(class="form-control") }}<br>
+        {% for error in form_question_2.par.errors %}
+    <p class="alert alert-danger" role="alert">
+        {{ error }}
+    </p>
+    {% endfor %}
+    </p>
+    <p>
+        {{ form_question_2.answers.label }}<br>
+        {{ form_question_2.answers(class="form-control") }}<br>
+        {% for error in form_question_2.answers.errors %}
+    <p class="alert alert-danger" role="alert">
+        {{ error }}
+    </p>
+    {% endfor %}
+    </p>
+    <p>
+        {{ form_question_2.time.label }}<br>
+        {{ form_question_2.time(class="form-control") }}<br>
+        {% for error in form_question_2.time.errors %}
+    <p class="alert alert-danger" role="alert">
+        {{ error }}
+    </p>
+    {% endfor %}
+    </p>
+</form>
+<h4>Question #3</h4>
+<form action="" method="post">
+    {{ form_question_3.hidden_tag() }}
+    {{ form_question_3.csrf_token }}
+    <p>
+        {{ form_question_3.text.label }}<br>
+        {{ form_question_3.text(class="form-control") }}<br>
+        {% for error in form_question_3.text.errors %}
+    <p class="alert alert-danger" role="alert">
+        {{ error }}
+    </p>
+    {% endfor %}
+    </p>
+    <p>
+        {{ form_question_3.par.label }}<br>
+        {{ form_question_3.par(class="form-control") }}<br>
+        {% for error in form_question_3.par.errors %}
+    <p class="alert alert-danger" role="alert">
+        {{ error }}
+    </p>
+    {% endfor %}
+    </p>
+    <p>
+        {{ form_question_3.answers.label }}<br>
+        {{ form_question_3.answers(class="form-control") }}<br>
+        {% for error in form_question_3.answers.errors %}
+    <p class="alert alert-danger" role="alert">
+        {{ error }}
+    </p>
+    {% endfor %}
+    </p>
+    <p>
+        {{ form_question_3.time.label }}<br>
+        {{ form_question_3.time(class="form-control") }}<br>
+        {% for error in form_question_3.time.errors %}
+    <p class="alert alert-danger" role="alert">
+        {{ error }}
+    </p>
+    {% endfor %}
+    </p>
+</form>
+<h4>Question #4</h4>
+<form action="" method="post">
+    {{ form_question_4.hidden_tag() }}
+    {{ form_question_4.csrf_token }}
+    <p>
+        {{ form_question_4.text.label }}<br>
+        {{ form_question_4.text(class="form-control") }}<br>
+        {% for error in form_question_4.text.errors %}
+    <p class="alert alert-danger" role="alert">
+        {{ error }}
+    </p>
+    {% endfor %}
+    </p>
+    <p>
+        {{ form_question_4.par.label }}<br>
+        {{ form_question_4.par(class="form-control") }}<br>
+        {% for error in form_question_4.par.errors %}
+    <p class="alert alert-danger" role="alert">
+        {{ error }}
+    </p>
+    {% endfor %}
+    </p>
+    <p>
+        {{ form_question_4.answers.label }}<br>
+        {{ form_question_4.answers(class="form-control") }}<br>
+        {% for error in form_question_4.answers.errors %}
+    <p class="alert alert-danger" role="alert">
+        {{ error }}
+    </p>
+    {% endfor %}
+    </p>
+    <p>
+        {{ form_question_4.time.label }}<br>
+        {{ form_question_4.time(class="form-control") }}<br>
+        {% for error in form_question_4.time.errors %}
+    <p class="alert alert-danger" role="alert">
+        {{ error }}
+    </p>
+    {% endfor %}
+    </p>
+</form>
+<h4>Question #5</h4>
+<form action="" method="post">
+    {{ form_question_5.hidden_tag() }}
+    {{ form_question_5.csrf_token }}
+    <p>
+        {{ form_question_5.text.label }}<br>
+        {{ form_question_5.text(class="form-control") }}<br>
+        {% for error in form_question_5.text.errors %}
+    <p class="alert alert-danger" role="alert">
+        {{ error }}
+    </p>
+    {% endfor %}
+    </p>
+    <p>
+        {{ form_question_5.par.label }}<br>
+        {{ form_question_5.par(class="form-control") }}<br>
+        {% for error in form_question_5.par.errors %}
+    <p class="alert alert-danger" role="alert">
+        {{ error }}
+    </p>
+    {% endfor %}
+    </p>
+    <p>
+        {{ form_question_5.answers.label }}<br>
+        {{ form_question_5.answers(class="form-control") }}<br>
+        {% for error in form_question_5.answers.errors %}
+    <p class="alert alert-danger" role="alert">
+        {{ error }}
+    </p>
+    {% endfor %}
+    </p>
+    <p>
+        {{ form_question_5.time.label }}<br>
+        {{ form_question_5.time(class="form-control") }}<br>
+        {% for error in form_question_5.time.errors %}
+    <p class="alert alert-danger" role="alert">
+        {{ error }}
+    </p>
+    {% endfor %}
+    </p>
+</form>
+{% endblock %}

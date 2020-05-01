@@ -29,7 +29,7 @@
         <h4>Here you can add packs to play after authorization</h4>
         {% if current_user.is_authenticated %}
         <a class="navbar-brand" href="/logout">{{ current_user.name }} {{ current_user.surname }}</a>
-        <a class="btn btn-secondary">Add pack (not available yet)</a>
+        <a class="btn btn-secondary" href="/game/{{game_id}}/rounds/1/category">Add pack</a>
         {% else %}
         <p>
             <a class="btn btn-primary " href="/register">Register</a>

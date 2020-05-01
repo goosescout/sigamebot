@@ -4,7 +4,7 @@ from data import db_session
 from flask_login import LoginManager
 from data.users import User
 from data.packs import Pack
-from data.forms import LoginForm, RegisterForm, CategoryForm, QuestionForm, SubmitForm
+from data.forms import LoginForm, RegisterForm, GameForm, QuestionForm, SubmitForm
 from flask_login import login_user, logout_user, login_required, current_user
 import json
 
@@ -17,8 +17,8 @@ login_manager.init_app(app)
 @app.route("/")
 def index():
     session = db_session.create_session()
-    job_id = session.query(Pack).filter(Pack.id).all()[-1]
-    return render_template('base.html', job_id=job_id)
+    game_id = session.query(Pack).filter(Pack.id).all()[-1].id + 1
+    return render_template('base.html', game_id=game_id)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -72,179 +72,166 @@ def register():
 @app.route('/game/<int:game_id>/rounds/<int:round>/category', methods=['GET', 'POST'])
 def game(game_id, round):
     session = db_session.create_session()
-    form_category = CategoryForm()
-    form_question_1 = QuestionForm()
-    form_question_2 = QuestionForm()
-    form_question_3 = QuestionForm()
-    form_question_4 = QuestionForm()
-    form_question_5 = QuestionForm()
+    game_form = GameForm()
     # submit field is pressed
-    if not session.query(Pack).filter((Pack.id == game_id)).first():
-        with open(f'/Users/alekseyostrovskiy/Desktop/sigamebot/games/{game_id}.json', 'w', encoding='utf-8') as f:
-            data = {
-                "rounds": [
-                    {
-                        "categories": [
-
-                        ]
-                    }
-                ]
-            }
-            json.dump(data, f, indent=4)
-            pack = Pack(
-                game=f'/Users/alekseyostrovskiy/Desktop/sigamebot/games/{game_id}.json',
-                user_id=current_user.id
-            )
-            session.add(pack)
-            session.commit()
-    category_data = ({
-                         "name": form_category.category.data,
-                         "description": form_category.description.data,
-                         "questions": [
-                             {
-                                 "text": form_question_1.text.data,
-                                 "par": form_question_1.par.data,
-                                 "correct_answers": form_question_1.answers.data,
-                                 "answer_time": form_question_1.time.data
-                             },
-                             {
-                                 "text": form_question_2.text.data,
-                                 "par": form_question_2.par.data,
-                                 "correct_answers": form_question_2.answers.data,
-                                 "answer_time": form_question_2.time.data
-                             },
-                             {
-                                 "text": form_question_3.text.data,
-                                 "par": form_question_3.par.data,
-                                 "correct_answers": form_question_3.answers.data,
-                                 "answer_time": form_question_3.time.data
-                             },
-                             {
-                                 "text": form_question_4.text.data,
-                                 "par": form_question_4.par.data,
-                                 "correct_answers": form_question_4.answers.data,
-                                 "answer_time": form_question_4.time.data
-                             },
-                             {
-                                 "text": form_question_5.text.data,
-                                 "par": form_question_5.par.data,
-                                 "correct_answers": form_question_5.answers.data,
-                                 "answer_time": form_question_5.time.data
-                             }
-                         ]
-                     },)
-    with open(f'/Users/alekseyostrovskiy/Desktop/sigamebot/games/{game_id}.json', encoding='utf-8') as f:
-        data = json.load(f)
-    data["rounds"][round - 1]["categories"] += list(category_data)
-    with open(f'/Users/alekseyostrovskiy/Desktop/sigamebot/games/{game_id}.json', 'w', encoding='utf-8') as f:
-        json.dump(data, f, indent=4)
-    # redirect('/game/game_id/rounds/round')
-    '''
-    elif round submit filed is pressed:
-        round_data = ({
+    if game_form.validate_on_submit() and game_form.category_submit.data:
+        if not session.query(Pack).filter((Pack.id == game_id)).first():
+            with open(f'/Users/alekseyostrovskiy/Desktop/sigamebot/games/{game_id}.json', 'w') as f:
+                data = {
+                    "rounds": [
+                        {
                             "categories": [
-    
+
                             ]
-                        },)
-    with open(f'/Users/alekseyostrovskiy/Desktop/sigamebot/games/{game_id}.json', encoding='utf-8') as f:
-        data = json.load(f)
-    data["rounds"] += list(round_data)
-    with open(f'/Users/alekseyostrovskiy/Desktop/sigamebot/games/{game_id}.json', 'w', encoding='utf-8') as f:
-        json.dump(data, f, indent=4)
-    category_data = ({
-        "name": form_category.category.data,
-        "description": form_category.description.data,
-        "questions": [
-            {
-                "text": form_question_1.text.data,
-                "par": form_question_1.par.data,
-                "correct_answers": form_question_1.answers.data,
-                "answer_time": form_question_1.time.data
-            },
-            {
-                "text": form_question_2.text.data,
-                "par": form_question_2.par.data,
-                "correct_answers": form_question_2.answers.data,
-                "answer_time": form_question_2.time.data
-            },
-            {
-                "text": form_question_3.text.data,
-                "par": form_question_3.par.data,
-                "correct_answers": form_question_3.answers.data,
-                "answer_time": form_question_3.time.data
-            },
-            {
-                "text": form_question_4.text.data,
-                "par": form_question_4.par.data,
-                "correct_answers": form_question_4.answers.data,
-                "answer_time": form_question_4.time.data
-            },
-            {
-                "text": form_question_5.text.data,
-                "par": form_question_5.par.data,
-                "correct_answers": form_question_5.answers.data,
-                "answer_time": form_question_5.time.data
-            }
-        ]
-    }, )
-    with open(f'/Users/alekseyostrovskiy/Desktop/sigamebot/games/{game_id}.json', encoding='utf-8') as f:
-        data = json.load(f)
-    data["rounds"][round - 1]["categories"] += list(category_data)
-    with open(f'/Users/alekseyostrovskiy/Desktop/sigamebot/games/{game_id}.json', 'w', encoding='utf-8') as f:
-        json.dump(data, f, indent=4)
-    return redirect('/game/game_id/rounds/round + 1)
-    elif finish submit is pressed:
+                        }
+                    ]
+                }
+                json.dump(data, f, indent=4)
+                pack = Pack(
+                    game=f'/Users/alekseyostrovskiy/Desktop/sigamebot/games/{game_id}.json',
+                    user_id=current_user.id
+                )
+                session.add(pack)
+                session.commit()
         category_data = ({
-        "name": form_category.category.data,
-        "description": form_category.description.data,
-        "questions": [
-            {
-                "text": form_question_1.text.data,
-                "par": form_question_1.par.data,
-                "correct_answers": form_question_1.answers.data,
-                "answer_time": form_question_1.time.data
-            },
-            {
-                "text": form_question_2.text.data,
-                "par": form_question_2.par.data,
-                "correct_answers": form_question_2.answers.data,
-                "answer_time": form_question_2.time.data
-            },
-            {
-                "text": form_question_3.text.data,
-                "par": form_question_3.par.data,
-                "correct_answers": form_question_3.answers.data,
-                "answer_time": form_question_3.time.data
-            },
-            {
-                "text": form_question_4.text.data,
-                "par": form_question_4.par.data,
-                "correct_answers": form_question_4.answers.data,
-                "answer_time": form_question_4.time.data
-            },
-            {
-                "text": form_question_5.text.data,
-                "par": form_question_5.par.data,
-                "correct_answers": form_question_5.answers.data,
-                "answer_time": form_question_5.time.data
-            }
-        ]
-    }, )
-    with open(f'/Users/alekseyostrovskiy/Desktop/sigamebot/games/{game_id}.json', encoding='utf-8') as f:
-        data = json.load(f)
-    data["rounds"][round - 1]["categories"] += list(category_data)
-    with open(f'/Users/alekseyostrovskiy/Desktop/sigamebot/games/{game_id}.json', 'w', encoding='utf-8') as f:
-        json.dump(data, f, indent=4)
-    return redirect('/')
-    '''
-    return render_template('game.html', title='Game editing',
-                           form_category=form_category,
-                           form_question_1=form_question_1,
-                           form_question_2=form_question_2,
-                           form_question_3=form_question_3,
-                           form_question_4=form_question_4,
-                           form_question_5=form_question_5
-                           )
+                             "name": game_form.category.data,
+                             "description": game_form.description.data,
+                             "questions": [
+                                 {
+                                     "text": game_form.text.data,
+                                     "par": game_form.par.data,
+                                     "correct_answers": game_form.answers.data,
+                                     "answer_time": game_form.time.data
+                                 },
+                                 {
+                                     "text": game_form.text_1.data,
+                                     "par": game_form.par_1.data,
+                                     "correct_answers": game_form.answers_1.data,
+                                     "answer_time": game_form.time_1.data
+                                 },
+                                 {
+                                     "text": game_form.text_2.data,
+                                     "par": game_form.par_2.data,
+                                     "correct_answers": game_form.answers_2.data,
+                                     "answer_time": game_form.time_2.data
+                                 },
+                                 {
+                                     "text": game_form.text_3.data,
+                                     "par": game_form.par_3.data,
+                                     "correct_answers": game_form.answers_3.data,
+                                     "answer_time": game_form.time_3.data
+                                 },
+                                 {
+                                     "text": game_form.text_4.data,
+                                     "par": game_form.par_4.data,
+                                     "correct_answers": game_form.answers_4.data,
+                                     "answer_time": game_form.time_4.data
+                                 }
+                             ]
+                         },)
+        with open(f'/Users/alekseyostrovskiy/Desktop/sigamebot/games/{game_id}.json') as f:
+            data = json.load(f)
+        data["rounds"][round - 1]["categories"] += list(category_data)
+        with open(f'/Users/alekseyostrovskiy/Desktop/sigamebot/games/{game_id}.json', 'w') as f:
+            json.dump(data, f, indent=4)
+        return redirect(f'/game/{game_id}/rounds/{round}/category')
+    elif game_form.validate_on_submit() and game_form.round_submit.data:
+        round_data = ({
+                          "categories": [
+                          ]
+                      },)
+        with open(f'/Users/alekseyostrovskiy/Desktop/sigamebot/games/{game_id}.json') as f:
+            data = json.load(f)
+        data["rounds"] += list(round_data)
+        with open(f'/Users/alekseyostrovskiy/Desktop/sigamebot/games/{game_id}.json', 'w') as f:
+            json.dump(data, f, indent=4)
+        category_data = ({
+                             "name": game_form.category.data,
+                             "description": game_form.description.data,
+                             "questions": [
+                                 {
+                                     "text": game_form.text.data,
+                                     "par": game_form.par.data,
+                                     "correct_answers": game_form.answers.data,
+                                     "answer_time": game_form.time.data
+                                 },
+                                 {
+                                     "text": game_form.text_1.data,
+                                     "par": game_form.par_1.data,
+                                     "correct_answers": game_form.answers_1.data,
+                                     "answer_time": game_form.time_1.data
+                                 },
+                                 {
+                                     "text": game_form.text_2.data,
+                                     "par": game_form.par_2.data,
+                                     "correct_answers": game_form.answers_2.data,
+                                     "answer_time": game_form.time_2.data
+                                 },
+                                 {
+                                     "text": game_form.text_3.data,
+                                     "par": game_form.par_3.data,
+                                     "correct_answers": game_form.answers_3.data,
+                                     "answer_time": game_form.time_3.data
+                                 },
+                                 {
+                                     "text": game_form.text_4.data,
+                                     "par": game_form.par_4.data,
+                                     "correct_answers": game_form.answers_4.data,
+                                     "answer_time": game_form.time_4.data
+                                 }
+                             ]
+                         },)
+        with open(f'/Users/alekseyostrovskiy/Desktop/sigamebot/games/{game_id}.json') as f:
+            data = json.load(f)
+        data["rounds"][round - 1]["categories"] += list(category_data)
+        with open(f'/Users/alekseyostrovskiy/Desktop/sigamebot/games/{game_id}.json', 'w') as f:
+            json.dump(data, f, indent=4)
+        return redirect(f'/game/{game_id}/rounds/{round + 1}/category')
+    elif game_form.validate_on_submit() and game_form.finish_submit.data:
+        category_data = ({
+                             "name": game_form.category.data,
+                             "description": game_form.description.data,
+                             "questions": [
+                                 {
+                                     "text": game_form.text.data,
+                                     "par": game_form.par.data,
+                                     "correct_answers": game_form.answers.data,
+                                     "answer_time": game_form.time.data
+                                 },
+                                 {
+                                     "text": game_form.text_1.data,
+                                     "par": game_form.par_1.data,
+                                     "correct_answers": game_form.answers_1.data,
+                                     "answer_time": game_form.time_1.data
+                                 },
+                                 {
+                                     "text": game_form.text_2.data,
+                                     "par": game_form.par_2.data,
+                                     "correct_answers": game_form.answers_2.data,
+                                     "answer_time": game_form.time_2.data
+                                 },
+                                 {
+                                     "text": game_form.text_3.data,
+                                     "par": game_form.par_3.data,
+                                     "correct_answers": game_form.answers_3.data,
+                                     "answer_time": game_form.time_3.data
+                                 },
+                                 {
+                                     "text": game_form.text_4.data,
+                                     "par": game_form.par_4.data,
+                                     "correct_answers": game_form.answers_4.data,
+                                     "answer_time": game_form.time_4.data
+                                 }
+                             ]
+                         },)
+        with open(f'/Users/alekseyostrovskiy/Desktop/sigamebot/games/{game_id}.json', encoding='utf-8') as f:
+            data = json.load(f)
+        data["rounds"][round - 1]["categories"] += list(category_data)
+        with open(f'/Users/alekseyostrovskiy/Desktop/sigamebot/games/{game_id}.json', 'w', encoding='utf-8') as f:
+            json.dump(data, f, indent=4)
+        return redirect('/')
+    elif request.method == 'GET':
+        return render_template('game.html', title='Game editing', game_form=game_form)
 
 
 @login_manager.user_loader
