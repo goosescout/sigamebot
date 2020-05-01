@@ -7,7 +7,7 @@ from data.packs import Pack
 from data.packs_resources import PackResource
 from data.forms import LoginForm, RegisterForm, GameForm
 from flask_login import login_user, logout_user, login_required, current_user
-from flask_restful import reqparse, abort, Api, Resource
+from flask_restful import Api
 import json
 
 app = Flask(__name__)
