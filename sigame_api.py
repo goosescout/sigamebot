@@ -81,7 +81,7 @@ def game(game_id, round):
     # submit field is pressed
     if game_form.validate_on_submit() and game_form.category_submit.data:
         if not session.query(Pack).filter((Pack.id == game_id)).first():
-            with open(f'/Users/alekseyostrovskiy/Desktop/sigamebot/games/{game_id}.json', 'w') as f:
+            with open(f'games/{game_id}.json', 'w') as f:
                 data = {
                     "rounds": [
                         {
@@ -93,7 +93,7 @@ def game(game_id, round):
                 }
                 json.dump(data, f, indent=4)
                 pack = Pack(
-                    game=f'/Users/alekseyostrovskiy/Desktop/sigamebot/games/{game_id}.json',
+                    game=f'games/{game_id}.json',
                     user_id=current_user.id
                 )
                 session.add(pack)
@@ -134,10 +134,10 @@ def game(game_id, round):
                                  }
                              ]
                          },)
-        with open(f'/Users/alekseyostrovskiy/Desktop/sigamebot/games/{game_id}.json') as f:
+        with open(f'games/{game_id}.json') as f:
             data = json.load(f)
         data["rounds"][round - 1]["categories"] += list(category_data)
-        with open(f'/Users/alekseyostrovskiy/Desktop/sigamebot/games/{game_id}.json', 'w') as f:
+        with open(f'games/{game_id}.json', 'w') as f:
             json.dump(data, f, indent=4)
         return redirect(f'/game/{game_id}/rounds/{round}/category')
     elif game_form.validate_on_submit() and game_form.round_submit.data:
@@ -145,10 +145,10 @@ def game(game_id, round):
                           "categories": [
                           ]
                       },)
-        with open(f'/Users/alekseyostrovskiy/Desktop/sigamebot/games/{game_id}.json') as f:
+        with open(f'games/{game_id}.json') as f:
             data = json.load(f)
         data["rounds"] += list(round_data)
-        with open(f'/Users/alekseyostrovskiy/Desktop/sigamebot/games/{game_id}.json', 'w') as f:
+        with open(f'games/{game_id}.json', 'w') as f:
             json.dump(data, f, indent=4)
         category_data = ({
                              "name": game_form.category.data,
@@ -186,10 +186,10 @@ def game(game_id, round):
                                  }
                              ]
                          },)
-        with open(f'/Users/alekseyostrovskiy/Desktop/sigamebot/games/{game_id}.json') as f:
+        with open(f'games/{game_id}.json') as f:
             data = json.load(f)
         data["rounds"][round - 1]["categories"] += list(category_data)
-        with open(f'/Users/alekseyostrovskiy/Desktop/sigamebot/games/{game_id}.json', 'w') as f:
+        with open(f'games/{game_id}.json', 'w') as f:
             json.dump(data, f, indent=4)
         return redirect(f'/game/{game_id}/rounds/{round + 1}/category')
     elif game_form.validate_on_submit() and game_form.finish_submit.data:
@@ -229,10 +229,10 @@ def game(game_id, round):
                                  }
                              ]
                          },)
-        with open(f'/Users/alekseyostrovskiy/Desktop/sigamebot/games/{game_id}.json', encoding='utf-8') as f:
+        with open(f'games/{game_id}.json', encoding='utf-8') as f:
             data = json.load(f)
         data["rounds"][round - 1]["categories"] += list(category_data)
-        with open(f'/Users/alekseyostrovskiy/Desktop/sigamebot/games/{game_id}.json', 'w', encoding='utf-8') as f:
+        with open(f'games/{game_id}.json', 'w', encoding='utf-8') as f:
             json.dump(data, f, indent=4)
         return redirect('/')
     elif request.method == 'GET':

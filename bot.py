@@ -4,6 +4,7 @@ import json
 import pymorphy2
 import random
 import asyncio
+import requests
 
 from dotenv import load_dotenv
 from discord.ext import commands
@@ -230,12 +231,11 @@ class GameSession:
         self.id = game_id
         # здесь будет получение пака через API
         
-        with open(f'{pack_name}.json', encoding='utf-8') as f:
-            self.pack = json.load(f)
-            for round_ in self.pack['rounds']:
-                for category in round_['categories']:
-                    for question in category['questions']:
-                        question['playable'] = True
+        self.pack = requests.get(f'http://localhost:5000/api/v2/packs/{pack_name}').json()
+        for round_ in self.pack['rounds']:
+            for category in round_['categories']:
+                for question in category['questions']:
+                    question['playable'] = True
 
         # ------
 
@@ -393,7 +393,7 @@ class GameSession:
 
     def answer(self, string):
         formatted_string = string.strip().lower()
-        for correct_answer in self.cur_question['correct_answers']:
+        for correct_answer in self.cur_question['correct_answers'].split(', '):
             if len(set(correct_answer.lower())) * 0.8 <= len(set(correct_answer.lower()) & set(formatted_string)) <= len(set(correct_answer.lower())):
                 self.members[self.cur_ans_player] += self.cur_question['par']
                 self.cur_player = self.cur_ans_player
@@ -435,7 +435,7 @@ class GameSession:
 
     def get_questions_ans(self):
         if not self.answer_str:
-            self.answer_str = random.choice(self.cur_question['correct_answers'])
+            self.answer_str = random.choice(self.cur_question['correct_answers'].split(', '))
         return self.answer_str
 
     def make_answer_pict(self):
