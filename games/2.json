@@ -145,42 +145,6 @@
                             "answer_time": null
                         }
                     ]
-                },
-                {
-                    "name": null,
-                    "description": null,
-                    "questions": [
-                        {
-                            "text": null,
-                            "par": null,
-                            "correct_answers": null,
-                            "answer_time": null
-                        },
-                        {
-                            "text": null,
-                            "par": null,
-                            "correct_answers": null,
-                            "answer_time": null
-                        },
-                        {
-                            "text": null,
-                            "par": null,
-                            "correct_answers": null,
-                            "answer_time": null
-                        },
-                        {
-                            "text": null,
-                            "par": null,
-                            "correct_answers": null,
-                            "answer_time": null
-                        },
-                        {
-                            "text": null,
-                            "par": null,
-                            "correct_answers": null,
-                            "answer_time": null
-                        }
-                    ]
                 }
             ]
         }
