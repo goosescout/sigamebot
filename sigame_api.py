@@ -4,14 +4,19 @@ from data import db_session
 from flask_login import LoginManager
 from data.users import User
 from data.packs import Pack
-from data.forms import LoginForm, RegisterForm, GameForm, QuestionForm, SubmitForm
+from data.packs_resources import PackResource
+from data.forms import LoginForm, RegisterForm, GameForm
 from flask_login import login_user, logout_user, login_required, current_user
+from flask_restful import reqparse, abort, Api, Resource
 import json
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 login_manager = LoginManager()
 login_manager.init_app(app)
+
+api = Api(app)
+api.add_resource(PackResource, '/api/v2/packs/<int:pack_id>')
 
 
 @app.route("/")
