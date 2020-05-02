@@ -12,6 +12,7 @@ from PIL import Image, ImageDraw, ImageFont
 from textwrap import wrap
 
 
+# загрузка токена бота из внешнего файла
 load_dotenv()
 TOKEN = os.getenv("DISCORD_BOT_TOKEN")
 
@@ -19,12 +20,14 @@ TOKEN = os.getenv("DISCORD_BOT_TOKEN")
 class SiGameBot(commands.Bot):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.games = {}
+        self.games = {}  # словарь со всеми играми (ключи - id каналов)
 
     async def on_message(self, message):
         if message.content.startswith('si! '):
+            # обработка команды
             await self.process_commands(message)
         elif message.channel in self.games.keys() and self.games[message.channel].get_author_requested() == message.author:
+            # если сейчас нужно выбрать категорию, то сообщения обрабатываются здесь
             try:
                 self.games[message.channel].init_question(message.content.lower().split()[0], int(message.content.split()[1]))
                 await self.ask_question(message.channel)
@@ -33,6 +36,7 @@ class SiGameBot(commands.Bot):
             except IndexError:
                 await message.channel.send("Недостаточно аргументов")
         elif message.channel in self.games.keys() and self.games[message.channel].get_race_requested() and message.content.strip().lower() == 'si!' and self.games[message.channel].is_member(message.author):
+            # если сейчас нужно определить, кто отвечает, то сообщение обрабатывается здесь
             if message.author in self.games[message.channel].get_forbidden():
                 await message.channel.send(f"{message.author.mention}, вы уже отвечали")
             else:
@@ -40,6 +44,7 @@ class SiGameBot(commands.Bot):
                 self.games[message.channel].race_requested = False
                 await self.answer_question(message.channel)
         elif message.channel in self.games.keys() and not self.games[message.channel].get_race_requested() and self.games[message.channel].get_ans_player() == message.author:
+            # если сейчас кто-то из игроков отвечает, то сообщение обрабатывается здесь
             cur_game = self.games[message.channel]
             if cur_game.answer(message.content):
                 await message.add_reaction('✅')
@@ -54,6 +59,7 @@ class SiGameBot(commands.Bot):
                 await self.post_answer(message.channel)
 
     async def post_answer(self, channel, no_answer=False):
+        # сообщение после ответа на вопрос
         cur_game = self.games[channel]
         if (cur_game.get_forbidden() == list(cur_game.get_members())) or no_answer:
             await channel.send("Никто не ответил на вопрос. Вопрос снимается.")
@@ -70,9 +76,11 @@ class SiGameBot(commands.Bot):
             await self.countdown(channel)
 
     async def on_ready(self):
+        # изменение статуса
         await self.change_presence(activity=discord.Game(name="SiGame"))
 
     async def show_questions(self, channel, start=False):
+        # функция, которая показывае вопросы (в начале раунда)
         cur_game = self.games[channel]
         members = cur_game.get_members()
         str_members = '\n'.join(map(lambda x: '• ' + str(x[0].mention) + ' - ' + str(x[1]), members.items()))
@@ -95,6 +103,7 @@ class SiGameBot(commands.Bot):
             cur_game.author_requested = cur_game.get_cur_player()
 
     async def end_game(self, channel):
+        # функция окончания игры
         if self.games[channel].get_cur_player():
             await channel.send(f"Игра закончена!\nПобеда уходит к {self.games[channel].get_winner().mention}!")
         else:
@@ -103,6 +112,7 @@ class SiGameBot(commands.Bot):
         del self.games[channel]
         
     async def ask_question(self, channel):
+        # функция, которая задаёт вопрос (отправляет картинку и т.д.)
         cur_game = self.games[channel]
         cur_game.author_requested = None
         morph = pymorphy2.MorphAnalyzer()
@@ -116,6 +126,7 @@ class SiGameBot(commands.Bot):
         await self.countdown(channel)
 
     async def countdown(self, channel):
+        # функция отсчета времени после того, как вопрос был задан
         cur_game = self.games[channel]
         cur_game.countdown_num += 1
         my_num = cur_game.countdown_num
@@ -125,6 +136,7 @@ class SiGameBot(commands.Bot):
             await self.post_answer(channel, True)
 
     async def answer_countdown(self, channel):
+        # функция отсчета времени после того, как кто-то начал отвечать на вопрос
         cur_game = self.games[channel]
         my_question = cur_game.get_cur_question()
         await asyncio.sleep(25)
@@ -137,6 +149,7 @@ class SiGameBot(commands.Bot):
             await self.post_answer(channel)
 
     async def answer_question(self, channel):
+        # функция, которая говорит, кто отвечает на вопрос
         cur_game = self.games[channel]
         await channel.send(f"{cur_game.cur_ans_player.mention} отвечает!\n(Введите ваш ответ без лишних символов, у вас есть 30 секунд)")
         await self.answer_countdown(channel)
@@ -219,6 +232,7 @@ class SiCommands(commands.Cog):
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
+        # обработчик исключений в командах
         if isinstance(error, commands.CommandNotFound):
             await ctx.send(f"Такой команды не существует")
         elif isinstance(error, commands.MissingRequiredArgument):
@@ -229,15 +243,12 @@ class GameSession:
     def __init__(self, pack_name, game_id):
         self.pack_name = pack_name
         self.id = game_id
-        # здесь будет получение пака через API
-        
-        self.pack = requests.get(f'http://localhost:5000/api/v2/packs/{pack_name}').json()
+        # получение пака через API
+        self.pack = requests.get(f'http://130.193.51.55:11000/api/v2/packs/{pack_name}').json()
         for round_ in self.pack['rounds']:
             for category in round_['categories']:
                 for question in category['questions']:
                     question['playable'] = True
-
-        # ------
 
         self.members = {}
         self.joinable = True
@@ -255,6 +266,7 @@ class GameSession:
         self.cur_player = None
 
     def add_member(self, member):
+        # добавление участника в игру
         if self.joinable:
             if member in self.members.keys():
                 raise ValueError(f"{member.mention}, ты уже в игре!")
@@ -264,18 +276,23 @@ class GameSession:
             raise ValueError('Сбор игроков уже завершен')
 
     def is_member(self, member):
+        # проверка, является ли человек игроком
         return member in self.members.keys()
 
     def is_joinable(self):
+        # проверка, можно ли подключиться к игр
         return self.joinable
 
     def get_members(self, names_only=False):
+        # возвращает всех игроков (или их имена)
         return self.members.keys() if names_only else self.members
 
     def get_cur_round(self):
+        # возвращает текущий раунд
         return self.cur_round
 
     def end_join(self):
+        # прекращает сбор игроков
         if self.joinable:
             if len(self.members) > 0:
                 self.joinable = False
@@ -286,6 +303,7 @@ class GameSession:
             raise ValueError('Сбор игроков уже завершен')
 
     def update_round(self):
+        # начало нового раунда
         self.cur_round += 1
         if self.cur_round == len(self.pack['rounds']):
             self.end_game()
@@ -297,12 +315,14 @@ class GameSession:
         return self.cur_round + 1
 
     def get_categories(self):
+        # возвращает все доступные категории в раунде
         result = {}
         for category in self.pack['rounds'][self.cur_round]['categories']:
             result[category['name']] = category['description']
         return result
 
     def create_table_image(self):
+        # создаёт изображение со всеми категориями и номиналами вопросов
         img = Image.new("RGB", (701, len(self.pack['rounds'][self.cur_round]['categories']) * 75 + 1), (0, 0, 255))
         draw = ImageDraw.Draw(img)
         font = ImageFont.truetype('static/OpenSans.ttf', 35)
@@ -318,6 +338,7 @@ class GameSession:
         img.save(f'temp/{self.id}.png')
 
     def end_game(self):
+        # заканчивает игру (удаляет игровые файлы)
         try:
             os.remove(f'temp/{self.id}.png')
             os.remove(f'temp/q{self.id}.png')
@@ -326,21 +347,27 @@ class GameSession:
             pass
 
     def reset_cur_player(self):
+        # обновляет текущего игрока
         self.cur_player = list(sorted(self.members.keys(), key=lambda x: self.members[x]))[-1]
 
     def get_image_path(self):
+        # возвращает путь до таблицы с вопросами
         return f'temp/{self.id}.png'
 
     def get_question_path(self):
+        # возвращает путь до картинки с вопросом
         return f'temp/q{self.id}.png'
 
     def get_cur_player(self):
+        # возвращает текущего игрока
         return self.cur_player
 
     def get_author_requested(self):
+        # возвращает игрока, который должен выбрать категорию и вопрос
         return self.author_requested
 
     def init_question(self, category_name, par):
+        # нахождние вопроса в паке
         found = False
         for i, category in enumerate(self.pack['rounds'][self.cur_round]['categories']):
             if category['name'] == category_name:
@@ -359,18 +386,21 @@ class GameSession:
             raise ValueError('Такого вопроса или категории не существует')
 
     def get_cur_question(self, text_only=False):
+        # возвращает текущий вопрос
         if text_only:
             return self.cur_question['text']
         else:
             return self.cur_question
 
     def get_cur_category(self, name_only=False):
+        # возвращает текущую категорию
         if name_only:
             return self.cur_category['name']
         else:
             return self.cur_category
 
     def make_question_pict(self):
+        # создаёт картинку вопроса
         img = Image.new("RGB", (701, 401), (0, 0, 255))
         draw = ImageDraw.Draw(img)
         font = ImageFont.truetype('static/OpenSans.ttf', 35)
@@ -386,12 +416,15 @@ class GameSession:
         img.save(f'temp/q{self.id}.png')
 
     def get_race_requested(self):
+        # проверка, происходит ли поиск отвечающего
         return self.race_requested
 
     def get_ans_player(self):
+        # возвращает отвечающего игрока
         return self.cur_ans_player
 
     def answer(self, string):
+        # обработчик ответа
         formatted_string = string.strip().lower()
         for correct_answer in self.cur_question['correct_answers'].split(', '):
             if len(set(correct_answer.lower())) * 0.8 <= len(set(correct_answer.lower()) & set(formatted_string)) <= len(set(correct_answer.lower())):
@@ -404,9 +437,11 @@ class GameSession:
             return False
 
     def forbid_to_ans(self, member):
+        # запрет на ответ игроку
         self.forbidden_to_ans.append(member)
 
     def reset(self):
+        # обновление игры после ответа на вопрос
         if self.cur_question:
             img = Image.open(self.get_image_path())
             draw = ImageDraw.Draw(img)
@@ -431,14 +466,17 @@ class GameSession:
             return False
 
     def get_forbidden(self):
+        # возвращает людей, которым нельзя отвечать на вопрос
         return self.forbidden_to_ans
 
     def get_questions_ans(self):
+        # возвращает ответы на вопросы
         if not self.answer_str:
             self.answer_str = random.choice(self.cur_question['correct_answers'].split(', '))
         return self.answer_str
 
     def make_answer_pict(self):
+        # создаёт картинку ответа
         img = Image.new("RGB", (701, 401), (0, 0, 255))
         draw = ImageDraw.Draw(img)
         font = ImageFont.truetype('static/OpenSans.ttf', 35)
@@ -454,12 +492,15 @@ class GameSession:
         img.save(f'temp/a{self.id}.png')
 
     def get_answer_path(self):
+        # возвращает путь до картинки с ответом
         return f'temp/a{self.id}.png'
 
     def get_winner(self):
+        # возращает победителя игры
         return list(sorted(self.members.keys(), key=lambda x: self.members[x]))[-1]
 
     def exit(self, member):
+        # выход игрока из игры
         del self.members[member]
 
 

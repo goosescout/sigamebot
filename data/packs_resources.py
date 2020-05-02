@@ -23,7 +23,7 @@ class PackResource(Resource):
         pack = session.query(Pack).get(pack_id)
         with open(pack.game) as f:
             data = json.load(f)
-        return data
+        return data  # возвращается json сразу, без jsonify
 
     def delete(self, pack_id):
         abort_if_pack_not_found(pack_id)
