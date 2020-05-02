@@ -3,222 +3,74 @@
         {
             "categories": [
                 {
-                    "name": null,
-                    "description": null,
+                    "name": "Верите?",
+                    "description": "Вы правда в это верите?",
                     "questions": [
                         {
-                            "text": null,
-                            "par": null,
-                            "correct_answers": null,
-                            "answer_time": null
+                            "text": "Приверженцы этой идеологии думают, что предоставить всем и каждому удовлетворение потребностей, а взамен требовать 'по возможностям' вполне реально. Рост этих потребностей в таком случае игнорируется",
+                            "par": 100,
+                            "correct_answers": "Коммунизм",
+                            "answer_time": 10
                         },
                         {
-                            "text": null,
-                            "par": null,
-                            "correct_answers": null,
-                            "answer_time": null
+                            "text": "Идеология, предполагающая ликвидацию государства в пользу частных компаний и контрактных юрисдикций. Шуток про суды не будет",
+                            "par": 200,
+                            "correct_answers": "Анархо-капитализм",
+                            "answer_time": 10
                         },
                         {
-                            "text": null,
-                            "par": null,
-                            "correct_answers": null,
-                            "answer_time": null
+                            "text": "Эта идеология при всех ее плюсах и минусах запятнала себя агрессией и была запрещена почти во всем мире с окончанием Второй Мировой. А еще лучшие умы интернетов никак не могут решить, правые они или левые.",
+                            "par": 300,
+                            "correct_answers": "Национал-социализм",
+                            "answer_time": 10
                         },
                         {
-                            "text": null,
-                            "par": null,
-                            "correct_answers": null,
-                            "answer_time": null
+                            "text": "Этот гражданин выступает за отключение России от электричества и запрет автомобилей. Его товары делаются якобы вручную, за что он просит непомерные цены: хлеб за 500 рублей, например.",
+                            "par": 400,
+                            "correct_answers": "Герман Стерлигов",
+                            "answer_time": 10
                         },
                         {
-                            "text": null,
-                            "par": null,
-                            "correct_answers": null,
-                            "answer_time": null
+                            "text": "Эти граждане выступают за предоставление неограниченных полномочий Владимиру Путину, который должен уничтожить 'колониальную' Конституцию и иностранный Центробанк РФ на благо народу",
+                            "par": 500,
+                            "correct_answers": "Национально-освободительное движение (НОД)",
+                            "answer_time": 15
                         }
                     ]
                 },
                 {
-                    "name": "1",
-                    "description": "1",
+                    "name": "Столицы",
+                    "description": "Вопросы и столицы",
                     "questions": [
                         {
-                            "text": "1",
-                            "par": 1,
-                            "correct_answers": "1",
-                            "answer_time": 1
+                            "text": "До 882 Русь была не Киевской. Где же была ее столица?",
+                            "par": 100,
+                            "correct_answers": "Новгород",
+                            "answer_time": 10
                         },
                         {
-                            "text": "1",
-                            "par": 1,
-                            "correct_answers": "1",
-                            "answer_time": 1
+                            "text": "В 1919 всего на 15 лет столица Украинской ССР была перенесена в этот граничащий с Россией город",
+                            "par": 200,
+                            "correct_answers": "Харьков",
+                            "answer_time": 10
                         },
                         {
-                            "text": "1",
-                            "par": 1,
-                            "correct_answers": "1",
-                            "answer_time": 1
+                            "text": "В этом городе была принята Конституция США, посему до 1800 года она, а не Вашингтон, была столицей. Еще она упоминалась в названии одного сериала.",
+                            "par": 300,
+                            "correct_answers": "Филадельфия",
+                            "answer_time": 10
                         },
                         {
-                            "text": "1",
-                            "par": 1,
-                            "correct_answers": "1",
-                            "answer_time": 1
+                            "text": "Столица этого государства долгое время была захолустным городом. Путешественники прошлых веков искренне удивлялись, почему Святой город настолько уныл.",
+                            "par": 400,
+                            "correct_answers": "Израиль, Иерусалим",
+                            "answer_time": 10
                         },
                         {
-                            "text": "1",
-                            "par": 1,
-                            "correct_answers": "1",
-                            "answer_time": 1
-                        }
-                    ]
-                },
-                {
-                    "name": "1",
-                    "description": "1\r\n1\r\n1",
-                    "questions": [
-                        {
-                            "text": "1",
-                            "par": 1,
-                            "correct_answers": "1",
-                            "answer_time": 1
-                        },
-                        {
-                            "text": "1",
-                            "par": 1,
-                            "correct_answers": "1111",
-                            "answer_time": 1
-                        },
-                        {
-                            "text": "11",
-                            "par": 1,
-                            "correct_answers": "1",
-                            "answer_time": 1
-                        },
-                        {
-                            "text": "1",
-                            "par": 1,
-                            "correct_answers": "1",
-                            "answer_time": 1
-                        },
-                        {
-                            "text": "1",
-                            "par": 1,
-                            "correct_answers": "1",
-                            "answer_time": 1
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "categories": [
-                {
-                    "name": "1",
-                    "description": "1",
-                    "questions": [
-                        {
-                            "text": "1",
-                            "par": 1,
-                            "correct_answers": "1",
-                            "answer_time": 1111
-                        },
-                        {
-                            "text": "1",
-                            "par": 1,
-                            "correct_answers": "1",
-                            "answer_time": 1
-                        },
-                        {
-                            "text": "1",
-                            "par": 1,
-                            "correct_answers": "1",
-                            "answer_time": 1
-                        },
-                        {
-                            "text": "1",
-                            "par": 1,
-                            "correct_answers": "1",
-                            "answer_time": 1
-                        },
-                        {
-                            "text": "1",
-                            "par": 1,
-                            "correct_answers": "1",
-                            "answer_time": 1
-                        }
-                    ]
-                },
-                {
-                    "name": "1",
-                    "description": "1",
-                    "questions": [
-                        {
-                            "text": "1",
-                            "par": 1,
-                            "correct_answers": "1",
-                            "answer_time": 1
-                        },
-                        {
-                            "text": "1",
-                            "par": 1,
-                            "correct_answers": "1",
-                            "answer_time": 1
-                        },
-                        {
-                            "text": "1",
-                            "par": 1,
-                            "correct_answers": "1",
-                            "answer_time": 1
-                        },
-                        {
-                            "text": "1",
-                            "par": 1,
-                            "correct_answers": "1",
-                            "answer_time": 1
-                        },
-                        {
-                            "text": "1",
-                            "par": 1,
-                            "correct_answers": "1",
-                            "answer_time": 1
-                        }
-                    ]
-                },
-                {
-                    "name": "1",
-                    "description": "1",
-                    "questions": [
-                        {
-                            "text": "1",
-                            "par": 1,
-                            "correct_answers": "1",
-                            "answer_time": 1
-                        },
-                        {
-                            "text": "1",
-                            "par": 1,
-                            "correct_answers": "1",
-                            "answer_time": 1
-                        },
-                        {
-                            "text": "1",
-                            "par": 1,
-                            "correct_answers": "1",
-                            "answer_time": 1
-                        },
-                        {
-                            "text": "1",
-                            "par": 1,
-                            "correct_answers": "1",
-                            "answer_time": 1
-                        },
-                        {
-                            "text": "1",
-                            "par": 1,
-                            "correct_answers": "1",
-                            "answer_time": 1
+                            "text": "Это государство должно быть благодарно пакту Молотова-Риббентропа за возврат своей столицы",
+                            "par": 500,
+                            "correct_answers": "Литва, Вильнюс",
+                            "answer_time": 15
                         }
                     ]
                 }
