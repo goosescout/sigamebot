@@ -248,7 +248,7 @@ def load_user(user_id):
 
 def main():
     db_session.global_init("db/si_game.sqlite")
-    port = int(os.environ.get("PORT", 10000))
+    port = int(os.environ.get("PORT", 11000))
     app.run(host='10.128.0.16', port=port)
 
 
