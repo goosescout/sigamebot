@@ -9,31 +9,31 @@
                         {
                             "text": "that's it",
                             "par": 100,
-                            "correct_answers": ["test", "test"],
+                            "correct_answers": "test, test",
                             "answer_time": 5
                         },
                         {
                             "text": "test",
                             "par": 100,
-                            "correct_answers": ["test", "test"],
+                            "correct_answers": "test, test",
                             "answer_time": 5
                         },
                         {
                             "text": "test",
                             "par": 100,
-                            "correct_answers": ["test", "test"],
+                            "correct_answers": "test, test",
                             "answer_time": 5
                         },
                         {
                             "text": "test",
                             "par": 100,
-                            "correct_answers": ["test", "test"],
+                            "correct_answers": "test, test",
                             "answer_time": 5
                         },
                         {
                             "text": "test",
                             "par": 100,
-                            "correct_answers": ["test", "test"],
+                            "correct_answers": "test, test",
                             "answer_time": 5
                         }
                     ]
@@ -45,31 +45,31 @@
                         {
                             "text": "test",
                             "par": 100,
-                            "correct_answers": ["test", "test"],
+                            "correct_answers": "test, test",
                             "answer_time": 5
                         },
                         {
                             "text": "test",
                             "par": 100,
-                            "correct_answers": ["test", "test"],
+                            "correct_answers": "test, test",
                             "answer_time": 5
                         },
                         {
                             "text": "test",
                             "par": 100,
-                            "correct_answers": ["test", "test"],
+                            "correct_answers": "test, test",
                             "answer_time": 5
                         },
                         {
                             "text": "test",
                             "par": 100,
-                            "correct_answers": ["test", "test"],
+                            "correct_answers": "test, test",
                             "answer_time": 5
                         },
                         {
                             "text": "test",
                             "par": 100,
-                            "correct_answers": ["test", "test"],
+                            "correct_answers": "test, test",
                             "answer_time": 5
                         }
                     ]
@@ -81,31 +81,31 @@
                         {
                             "text": "test",
                             "par": 100,
-                            "correct_answers": ["test", "test"],
+                            "correct_answers": "test, test",
                             "answer_time": 5
                         },
                         {
                             "text": "test",
                             "par": 100,
-                            "correct_answers": ["test", "test"],
+                            "correct_answers": "test, test",
                             "answer_time": 5
                         },
                         {
                             "text": "test",
                             "par": 100,
-                            "correct_answers": ["test", "test"],
+                            "correct_answers": "test, test",
                             "answer_time": 5
                         },
                         {
                             "text": "test",
                             "par": 100,
-                            "correct_answers": ["test", "test"],
+                            "correct_answers": "test, test",
                             "answer_time": 5
                         },
                         {
                             "text": "test",
                             "par": 100,
-                            "correct_answers": ["test", "test"],
+                            "correct_answers": "test, test",
                             "answer_time": 5
                         }
                     ]
@@ -121,13 +121,13 @@
                         {
                             "text": "test",
                             "par": 100,
-                            "correct_answers": ["test", "test"],
+                            "correct_answers": "test, test",
                             "answer_time": 5
                         },
                         {
                             "text": "test",
                             "par": 100,
-                            "correct_answers": ["test", "test"],
+                            "correct_answers": "test, test",
                             "answer_time": 5
                         }
                     ]
@@ -139,13 +139,13 @@
                         {
                             "text": "test",
                             "par": 100,
-                            "correct_answers": ["test", "test"],
+                            "correct_answers": "test, test",
                             "answer_time": 5
                         },
                         {
                             "text": "test",
                             "par": 100,
-                            "correct_answers": ["test", "test"],
+                            "correct_answers": "test, test",
                             "answer_time": 5
                         }
                     ]
