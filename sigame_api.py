@@ -8,6 +8,7 @@ from data.packs_resources import PackResource
 from data.forms import LoginForm, RegisterForm, GameForm
 from flask_login import login_user, logout_user, login_required, current_user
 from flask_restful import Api
+import os
 import json
 
 app = Flask(__name__)
@@ -247,7 +248,8 @@ def load_user(user_id):
 
 def main():
     db_session.global_init("db/si_game.sqlite")
-    app.run()
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='130.193.51.55', port=port)
 
 
 if __name__ == '__main__':
