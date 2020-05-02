@@ -244,7 +244,7 @@ class GameSession:
         self.pack_name = pack_name
         self.id = game_id
         # получение пака через API
-        self.pack = requests.get(f'http://localhost:5000/api/v2/packs/{pack_name}').json()
+        self.pack = requests.get(f'http://130.193.51.55:11000/api/v2/packs/{pack_name}').json()
         for round_ in self.pack['rounds']:
             for category in round_['categories']:
                 for question in category['questions']:
