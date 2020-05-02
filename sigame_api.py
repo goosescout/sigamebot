@@ -15,10 +15,12 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 login_manager = LoginManager()
 login_manager.init_app(app)
-
+# создание приложения
 api = Api(app)
 api.add_resource(PackResource, '/api/v2/packs/<int:pack_id>')
 
+
+# создание API
 
 @app.route("/")
 def index():
@@ -26,6 +28,8 @@ def index():
     game_id = session.query(Pack).filter(Pack.id).all()[-1].id + 1
     return render_template('base.html', game_id=game_id)
 
+
+# стартовая страница
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -42,12 +46,16 @@ def login():
     return render_template('login.html', title='Authorization', form=form)
 
 
+# страница входа
+
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect("/")
 
+
+# выход из профиля
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -75,12 +83,13 @@ def register():
     return render_template('register.html', title='Registration', form=form)
 
 
+# страница регистрации
+
 @app.route('/game/<int:game_id>/rounds/<int:round>/category', methods=['GET', 'POST'])
 def game(game_id, round):
     session = db_session.create_session()
     game_form = GameForm()
-    # submit field is pressed
-    if game_form.validate_on_submit() and game_form.category_submit.data:
+    if game_form.validate_on_submit() and game_form.category_submit.data:  # если нажата кнопка добавления категории
         if not session.query(Pack).filter((Pack.id == game_id)).first():
             with open(f'games/{game_id}.json', 'w') as f:
                 data = {
@@ -96,7 +105,7 @@ def game(game_id, round):
                 pack = Pack(
                     game=f'games/{game_id}.json',
                     user_id=current_user.id
-                )
+                )  # в таблицу записывается путь к файлу и id создателя
                 session.add(pack)
                 session.commit()
         category_data = ({
@@ -140,8 +149,9 @@ def game(game_id, round):
         data["rounds"][round - 1]["categories"] += list(category_data)
         with open(f'games/{game_id}.json', 'w') as f:
             json.dump(data, f, indent=4)
-        return redirect(f'/game/{game_id}/rounds/{round}/category')
-    elif game_form.validate_on_submit() and game_form.round_submit.data:
+        return redirect(
+            f'/game/{game_id}/rounds/{round}/category')  # перенаправление на эту же страницу для добавления категории
+    elif game_form.validate_on_submit() and game_form.round_submit.data:  # если нажата кнопка перехода к следующему раунду
         round_data = ({
                           "categories": [
                           ]
@@ -192,8 +202,9 @@ def game(game_id, round):
         data["rounds"][round - 1]["categories"] += list(category_data)
         with open(f'games/{game_id}.json', 'w') as f:
             json.dump(data, f, indent=4)
-        return redirect(f'/game/{game_id}/rounds/{round + 1}/category')
-    elif game_form.validate_on_submit() and game_form.finish_submit.data:
+        return redirect(
+            f'/game/{game_id}/rounds/{round + 1}/category')  # перенаправление на страницу оформления категории для следующего раунда
+    elif game_form.validate_on_submit() and game_form.finish_submit.data:  # если нажата кнопка окончания создания пака
         category_data = ({
                              "name": game_form.category.data,
                              "description": game_form.description.data,
@@ -235,7 +246,7 @@ def game(game_id, round):
         data["rounds"][round - 1]["categories"] += list(category_data)
         with open(f'games/{game_id}.json', 'w', encoding='utf-8') as f:
             json.dump(data, f, indent=4)
-        return redirect('/')
+        return redirect('/')  # возврат на главную
     elif request.method == 'GET':
         return render_template('game.html', title='Game editing', game_form=game_form)
 
@@ -246,11 +257,15 @@ def load_user(user_id):
     return session.query(User).get(user_id)
 
 
+# получение пользователя
+
 def main():
     db_session.global_init("db/si_game.sqlite")
     port = int(os.environ.get("PORT", 11000))
     app.run(host='10.128.0.16', port=port)
 
+
+# запуск приложения
 
 if __name__ == '__main__':
     main()
