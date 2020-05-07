@@ -309,6 +309,7 @@ class GameSession:
 
     def update_round(self):
         # начало нового раунда
+        print('раунд начался')
         self.cur_round += 1
         if self.cur_round == len(self.pack['rounds']):
             self.end_game()
@@ -317,6 +318,7 @@ class GameSession:
             self.cur_player = list(sorted(self.members.keys(), key=lambda x: self.members[x]))[-1]
         self.categories_closed = 0
         self.create_table_image()
+        print('картинка создана, путь:', self.get_image_path())
         return self.cur_round + 1
 
     def get_categories(self):
@@ -327,6 +329,7 @@ class GameSession:
         return result
 
     def create_table_image(self):
+        print('начинаю создавать картинку')
         # создаёт изображение со всеми категориями и номиналами вопросов
         img = Image.new("RGB", (701, len(self.pack['rounds'][self.cur_round]['categories']) * 75 + 1), (0, 0, 255))
         draw = ImageDraw.Draw(img)
@@ -340,6 +343,7 @@ class GameSession:
                     draw.rectangle([(i * 100 + 100, j * 75), ((i + 1) * 100 + 100, (j + 1) * 75)], width=2, outline=(255, 255, 0))
                     draw.text((i * 100 + 115, j * 75 + 15), str(self.pack['rounds'][self.cur_round]['categories'][j]['questions'][i - 1]['par']), fill=(255, 255, 0), font=font)
 
+        print(f'картинка: temp/{self.id}.png')
         img.save(f'temp/{self.id}.png')
 
     def end_game(self):
