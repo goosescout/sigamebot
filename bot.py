@@ -86,11 +86,13 @@ class SiGameBot(commands.Bot):
         str_members = '\n'.join(map(lambda x: '• ' + str(x[0].mention) + ' - ' + str(x[1]), members.items()))
         if start:
             try:
+                print('пытаюсь обновить раунд')
                 cur_game.update_round()
             except ValueError as error:
-                print(error)
+                print('не получилось', error)
                 await self.end_game(channel)
             else:
+                print('получилось!')
                 categories = cur_game.get_categories()
                 str_categories = '\n'.join(map(lambda x: '• ' + x[0] + ' - ' + x[1], categories.items()))
                 await channel.send(f"Начинается {cur_game.get_cur_round() + 1} раунд\n" +
