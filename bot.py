@@ -240,6 +240,8 @@ class SiCommands(commands.Cog):
             await ctx.send(f"Такой команды не существует")
         elif isinstance(error, commands.MissingRequiredArgument):
             await ctx.send(f"Недостаточно аргументов для команды")
+        else:
+            print(error)
 
 
 class GameSession:
