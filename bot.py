@@ -349,6 +349,7 @@ class GameSession:
     def end_game(self):
         # заканчивает игру (удаляет игровые файлы)
         try:
+            print('как я тут оказался???')
             os.remove(f'temp/{self.id}.png')
             os.remove(f'temp/q{self.id}.png')
             os.remove(f'temp/a{self.id}.png')
