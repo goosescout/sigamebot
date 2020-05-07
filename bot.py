@@ -87,7 +87,8 @@ class SiGameBot(commands.Bot):
         if start:
             try:
                 cur_game.update_round()
-            except ValueError:
+            except ValueError as error:
+                print(error)
                 await self.end_game(channel)
             else:
                 categories = cur_game.get_categories()
@@ -370,7 +371,7 @@ class GameSession:
         # нахождние вопроса в паке
         found = False
         for i, category in enumerate(self.pack['rounds'][self.cur_round]['categories']):
-            if category['name'] == category_name:
+            if category['name'].lower() == category_name:
                 self.cur_category = category
                 self.cur_category_num = i
                 for j, question in enumerate(category['questions']):
