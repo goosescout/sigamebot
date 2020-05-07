@@ -88,8 +88,7 @@ class SiGameBot(commands.Bot):
             try:
     
                 cur_game.update_round()
-            except ValueError as error:
-    
+            except ValueError:
                 await self.end_game(channel)
             else:
     
@@ -241,7 +240,7 @@ class SiCommands(commands.Cog):
         elif isinstance(error, commands.MissingRequiredArgument):
             await ctx.send(f"Недостаточно аргументов для команды")
         else:
-
+            print(error)
 
 
 class GameSession:
