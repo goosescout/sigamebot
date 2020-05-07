@@ -342,9 +342,9 @@ class GameSession:
                 else:
                     draw.rectangle([(i * 100 + 100, j * 75), ((i + 1) * 100 + 100, (j + 1) * 75)], width=2, outline=(255, 255, 0))
                     draw.text((i * 100 + 115, j * 75 + 15), str(self.pack['rounds'][self.cur_round]['categories'][j]['questions'][i - 1]['par']), fill=(255, 255, 0), font=font)
-
         print(f'картинка: temp/{self.id}.png')
         img.save(f'temp/{self.id}.png')
+        print(f'картинка точно: temp/{self.id}.png')
 
     def end_game(self):
         # заканчивает игру (удаляет игровые файлы)
